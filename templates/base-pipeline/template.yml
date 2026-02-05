@@ -114,7 +114,7 @@ variables:
       fi
 
       # Check if machine is available - report to GitHub
-      if [[ "$NODES_UP" -eq 0 || "$CI_MACHINE" == "dane" ]]; then
+      if [ "$NODES_UP" -eq 0 ]; then
         echo -e "\e[31mMachine ${CI_MACHINE} is down (${NODES_UP} nodes up)\e[0m"
 
         # Report machine unavailability to GitHub
