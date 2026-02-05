@@ -124,7 +124,7 @@ variables:
               --url "https://api.github.com/repos/$[[ inputs.github_project_org ]]/$[[ inputs.github_project_name ]]/statuses/${CI_COMMIT_SHA}" \
               --header 'Content-Type: application/json' \
               --header "authorization: Bearer $[[ inputs.github_token ]]" \
-              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"GitLab: ${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/lc.llnl.gov/${ASSOCIATED_CHILD_PIPELINE}\" }" \
+              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/lc.llnl.gov/${ASSOCIATED_CHILD_PIPELINE}\" }" \
               --output "$STATUS_RESPONSE" \
               --write-out "%{http_code}" \
               --silent \
