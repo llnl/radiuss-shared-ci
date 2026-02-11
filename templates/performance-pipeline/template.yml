@@ -97,14 +97,14 @@ include:
     file: 'id_tokens.yml'
 
 variables:
-  PERF_ARTIFACT_DIR: "$[[ inputs.perf_artifact_dir ]]"
-  PERF_RESULTS_FILE: "$[[ inputs.perf_results_file ]]"
-  PERF_PROCESSED_FILE: "$[[ inputs.perf_processed_file ]]"
-  JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
-  PERF_PROCESSING_CMD: "$[[ inputs.perf_processing_cmd ]]"
-  GITHUB_TOKEN: "$[[ inputs.github_token ]]"
-  GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
-  GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSC_PERF_ARTIFACT_DIR: "$[[ inputs.perf_artifact_dir ]]"
+  RSC_PERF_RESULTS_FILE: "$[[ inputs.perf_results_file ]]"
+  RSC_PERF_PROCESSED_FILE: "$[[ inputs.perf_processed_file ]]"
+  RSC_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
+  RSC_PERF_PROCESSING_CMD: "$[[ inputs.perf_processing_cmd ]]"
+  RSC_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
+  RSC_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
+  RSC_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
 
 stages:
   - perf-runs
@@ -117,7 +117,7 @@ stages:
 .perf_job:
   artifacts:
     paths:
-      - $PERF_ARTIFACT_DIR/
+      - $RSC_PERF_ARTIFACT_DIR/
 
 # Custom job template specific to performance pipeline.
 # Override this to create project-specific setup.
@@ -197,9 +197,9 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.dane_perf_alloc ]]
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - ${RSC_JOB_CMD}
 
 .perf_on_matrix:
   extends: [.perf_job, .on_matrix, .custom_perf]
@@ -207,9 +207,9 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.matrix_perf_alloc ]]
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - ${RSC_JOB_CMD}
 
 .perf_on_corona:
   extends: [.perf_job, .on_corona, .custom_perf]
@@ -217,9 +217,9 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.corona_perf_alloc ]]
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - ${RSC_JOB_CMD}
 
 .perf_on_tioga:
   extends: [.perf_job, .on_tioga, .custom_perf]
@@ -227,9 +227,9 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.tioga_perf_alloc ]]
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - ${RSC_JOB_CMD}
 
 .perf_on_tuolumne:
   extends: [.perf_job, .on_tuolumne, .custom_perf]
@@ -237,17 +237,17 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.tuolumne_perf_alloc ]]
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - ${RSC_JOB_CMD}
 
 .perf_on_lassen:
   extends: [.perf_job, .on_lassen, .custom_perf]
   stage: perf-runs
   script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - lalloc $[[ inputs.lassen_perf_alloc ]] ${JOB_CMD}
+    - export RSC_PERF_ARTIFACT_DIR=${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
+    - mkdir -p ${RSC_PERF_ARTIFACT_DIR}
+    - lalloc $[[ inputs.lassen_perf_alloc ]] ${RSC_JOB_CMD}
 
 ##############################################################################
 # PROCESSING AND REPORTING TEMPLATES
@@ -260,7 +260,7 @@ stages:
     - oslic
   artifacts:
     paths:
-      - $PERF_ARTIFACT_DIR/
+      - $RSC_PERF_ARTIFACT_DIR/
   variables:
     GIT_SUBMODULE_STRATEGY: none
 
@@ -274,22 +274,22 @@ stages:
     GIT_SUBMODULE_STRATEGY: none
 
 # Convert to Github Benchmark templates:
-# Projects provide their own ${PERF_PROCESSING_CMD} script to convert
+# Projects provide their own ${RSC_PERF_PROCESSING_CMD} script to convert
 # the data to github benchmark format.
 .convert_to_gh_benchmark:
   extends: .results_processing
   script:
     - |
-      for dir in ${PERF_ARTIFACT_DIR}/*/; do
-        if [ -n "${PERF_PROCESSING_CMD}" ]; then
+      for dir in ${RSC_PERF_ARTIFACT_DIR}/*/; do
+        if [ -n "${RSC_PERF_PROCESSING_CMD}" ]; then
           if [ -d "$dir" ]; then
             echo "Processing results in ${dir}"
             cd ${dir}
-            ${PERF_PROCESSING_CMD} "${PERF_RESULTS_FILE}" "${PERF_PROCESSED_FILE}"
+            ${RSC_PERF_PROCESSING_CMD} "${RSC_PERF_RESULTS_FILE}" "${RSC_PERF_PROCESSED_FILE}"
             cd -
           fi
         else
-          echo "[Warning] Unless processing is not required, PERF_PROCESSING_CMD should be defined."
+          echo "[Warning] Unless processing is not required, RSC_PERF_PROCESSING_CMD should be defined."
         fi
       done
 
@@ -306,10 +306,10 @@ stages:
   extends: .results_reporting
   script:
     - |
-      for file in ${PERF_ARTIFACT_DIR}/*/${PERF_PROCESSED_FILE}; do
+      for file in ${RSC_PERF_ARTIFACT_DIR}/*/${RSC_PERF_PROCESSED_FILE}; do
         if [ -f "$file" ]; then
           # Check if required variables are set
-          if [ -z "$GITHUB_TOKEN" ] || [ -z "$GITHUB_PROJECT_ORG" ] || [ -z "$GITHUB_PROJECT_NAME" ]; then
+          if [ -z "$RSC_GITHUB_TOKEN" ] || [ -z "$RSC_GITHUB_PROJECT_ORG" ] || [ -z "$RSC_GITHUB_PROJECT_NAME" ]; then
             echo "Error: Required GitHub variables not set"
             exit 1
           fi
@@ -320,8 +320,8 @@ stages:
           BENCHMARK_DATA=$(base64 -w 0 "$file")
           RESPONSE_BODY=$(mktemp)
           HTTP_CODE=$(curl --retry 3 --retry-delay 5 --retry-connrefused --max-time 30 -X POST \
-               --url "https://api.github.com/repos/${GITHUB_PROJECT_ORG}/${GITHUB_PROJECT_NAME}/actions/workflows/benchmark.yml/dispatches" \
-               --header "Authorization: token $GITHUB_TOKEN" \
+               --url "https://api.github.com/repos/${RSC_GITHUB_PROJECT_ORG}/${RSC_GITHUB_PROJECT_NAME}/actions/workflows/benchmark.yml/dispatches" \
+               --header "Authorization: token $RSC_GITHUB_TOKEN" \
                --header "Accept: application/vnd.github.v3+json" \
                --header "Content-Type: application/json" \
                --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\" } }" \
