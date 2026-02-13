@@ -19,6 +19,14 @@
         echo -e "\e[31mError: CI_MACHINE variable not set\e[0m"
         exit 1
       fi
+      # ASSOCIATED_CHILD_PIPELINE is used for GitHub status context so that a
+      # successful check can be associated with the correct child pipeline in
+      # GitHub. While not strictly required for the machine check itself, it's
+      # important for accurate reporting.
+      if [ -z "$ASSOCIATED_CHILD_PIPELINE" ]; then
+        echo -e "\e[31mError: ASSOCIATED_CHILD_PIPELINE variable not set\e[0m"
+        exit 1
+      fi
 
       # Check if lorenz status file exists
       LORENZ_STATUS_FILE="/usr/global/tools/lorenz/data/loginnodeStatus"
@@ -58,7 +66,7 @@
               --url "https://api.github.com/repos/${GITHUB_PROJECT_ORG}/${GITHUB_PROJECT_NAME}/statuses/${CI_COMMIT_SHA}" \
               --header 'Content-Type: application/json' \
               --header "authorization: Bearer ${GITHUB_TOKEN}" \
-              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"GitLab: ${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/${CI_MACHINE}\" }" \
+              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/lc.llnl.gov/${ASSOCIATED_CHILD_PIPELINE}\" }" \
               --output "$STATUS_RESPONSE" \
               --write-out "%{http_code}" \
               --silent \
@@ -121,6 +129,7 @@
 dane-up-check:
   variables:
     CI_MACHINE: "dane"
+    ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"
   extends: [.machine-check]
   rules:
     # Runs except if we explicitly deactivate dane by variable.
@@ -146,6 +155,7 @@ dane-build-and-test:
 matrix-up-check:
   variables:
     CI_MACHINE: "matrix"
+    ASSOCIATED_CHILD_PIPELINE: "matrix-build-and-test"
   extends: [.machine-check]
   rules:
     # Runs except if we explicitly deactivate matrix by variable.
@@ -171,6 +181,7 @@ matrix-build-and-test:
 corona-up-check:
   variables:
     CI_MACHINE: "corona"
+    ASSOCIATED_CHILD_PIPELINE: "corona-build-and-test"
   extends: [.machine-check]
   rules:
     - if: '$ON_CORONA == "OFF"'
@@ -194,6 +205,7 @@ corona-build-and-test:
 tioga-up-check:
   variables:
     CI_MACHINE: "tioga"
+    ASSOCIATED_CHILD_PIPELINE: "tioga-build-and-test"
   extends: [.machine-check]
   rules:
     - if: '$ON_TIOGA == "OFF"'
@@ -217,6 +229,7 @@ tioga-build-and-test:
 tuolumne-up-check:
   variables:
     CI_MACHINE: "tuolumne"
+    ASSOCIATED_CHILD_PIPELINE: "tuolumne-build-and-test"
   extends: [.machine-check]
   rules:
     - if: '$ON_TUOLUMNE == "OFF"'
@@ -240,6 +253,7 @@ tuolumne-build-and-test:
 lassen-up-check:
   variables:
     CI_MACHINE: "lassen"
+    ASSOCIATED_CHILD_PIPELINE: "lassen-build-and-test"
   extends: [.machine-check]
   rules:
     - if: '$ON_LASSEN == "OFF"'
