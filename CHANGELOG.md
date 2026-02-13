@@ -8,7 +8,7 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 
 ## [Unreleased]
 
-Added RSC_ environment variable prefix in for internal variables that come from component inputs to prevent collisions with GitLab globals.
+Added RSCI_ environment variable prefix in for internal variables that come from component inputs to prevent collisions with GitLab globals.
 Note that component input names are unchanged.
 
 Switch performance pipeline to batch executor for automatic job cancellation.

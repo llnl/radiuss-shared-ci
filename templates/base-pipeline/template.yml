@@ -41,9 +41,9 @@ include:
     file: 'id_tokens.yml'
 
 variables:
-  RSC_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
-  RSC_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
-  RSC_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
+  RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
+  RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSCI_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
 
 ##############################################################################
 # IMPORTANT: Stage Definition
@@ -110,12 +110,12 @@ variables:
         echo -e "\e[31mMachine ${CI_MACHINE} is down (${NODES_UP} nodes up)\e[0m"
 
         # Report machine unavailability to GitHub
-        if [ -n "${RSC_GITHUB_TOKEN}" ] && [ -n "${RSC_GITHUB_PROJECT_ORG}" ] && [ -n "${RSC_GITHUB_PROJECT_NAME}" ]; then
+        if [ -n "${RSCI_GITHUB_TOKEN}" ] && [ -n "${RSCI_GITHUB_PROJECT_ORG}" ] && [ -n "${RSCI_GITHUB_PROJECT_NAME}" ]; then
           STATUS_RESPONSE=$(mktemp)
           STATUS_HTTP_CODE=$(curl --retry 3 --retry-delay 5 --max-time 30 \
-              --url "https://api.github.com/repos/${RSC_GITHUB_PROJECT_ORG}/${RSC_GITHUB_PROJECT_NAME}/statuses/${CI_COMMIT_SHA}" \
+              --url "https://api.github.com/repos/${RSCI_GITHUB_PROJECT_ORG}/${RSCI_GITHUB_PROJECT_NAME}/statuses/${CI_COMMIT_SHA}" \
               --header 'Content-Type: application/json' \
-              --header "authorization: Bearer ${RSC_GITHUB_TOKEN}" \
+              --header "authorization: Bearer ${RSCI_GITHUB_TOKEN}" \
               --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"GitLab: ${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/${CI_MACHINE}\" }" \
               --output "$STATUS_RESPONSE" \
               --write-out "%{http_code}" \

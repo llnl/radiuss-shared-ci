@@ -97,14 +97,14 @@ include:
     file: 'id_tokens.yml'
 
 variables:
-  RSC_PERF_ARTIFACT_DIR: "$[[ inputs.perf_artifact_dir ]]"
-  RSC_PERF_RESULTS_FILE: "$[[ inputs.perf_results_file ]]"
-  RSC_PERF_PROCESSED_FILE: "$[[ inputs.perf_processed_file ]]"
-  RSC_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
-  RSC_PERF_PROCESSING_CMD: "$[[ inputs.perf_processing_cmd ]]"
-  RSC_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
-  RSC_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
-  RSC_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSCI_PERF_ARTIFACT_DIR: "$[[ inputs.perf_artifact_dir ]]"
+  RSCI_PERF_RESULTS_FILE: "$[[ inputs.perf_results_file ]]"
+  RSCI_PERF_PROCESSED_FILE: "$[[ inputs.perf_processed_file ]]"
+  RSCI_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
+  RSCI_PERF_PROCESSING_CMD: "$[[ inputs.perf_processing_cmd ]]"
+  RSCI_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
+  RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
+  RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
 
 stages:
   - perf-runs
@@ -118,15 +118,15 @@ stages:
   after_script:
     # Reorganize artifacts by job name
     - |
-      if [ -d "${RSC_PERF_ARTIFACT_DIR}" ]; then
-        mkdir -p "${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}"
-        for item in ${RSC_PERF_ARTIFACT_DIR}/*; do
-          [ "$(basename "$item")" != "${CI_JOB_NAME}" ] && mv "$item" "${RSC_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}/" || true
+      if [ -d "${RSCI_PERF_ARTIFACT_DIR}" ]; then
+        mkdir -p "${RSCI_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}"
+        for item in ${RSCI_PERF_ARTIFACT_DIR}/*; do
+          [ "$(basename "$item")" != "${CI_JOB_NAME}" ] && mv "$item" "${RSCI_PERF_ARTIFACT_DIR}/${CI_JOB_NAME}/" || true
         done
       fi
   artifacts:
     paths:
-      - $RSC_PERF_ARTIFACT_DIR/
+      - $RSCI_PERF_ARTIFACT_DIR/
 
 # Custom job template specific to performance pipeline.
 # Override this to create project-specific setup.
@@ -206,7 +206,7 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.dane_perf_alloc ]]
   script:
-    - ${RSC_JOB_CMD}
+    - ${RSCI_JOB_CMD}
 
 .perf_on_matrix:
   extends: [.perf_job, .on_matrix, .custom_perf]
@@ -214,7 +214,7 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.matrix_perf_alloc ]]
   script:
-    - ${RSC_JOB_CMD}
+    - ${RSCI_JOB_CMD}
 
 .perf_on_corona:
   extends: [.perf_job, .on_corona, .custom_perf]
@@ -222,7 +222,7 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.corona_perf_alloc ]]
   script:
-    - ${RSC_JOB_CMD}
+    - ${RSCI_JOB_CMD}
 
 .perf_on_tioga:
   extends: [.perf_job, .on_tioga, .custom_perf]
@@ -230,7 +230,7 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.tioga_perf_alloc ]]
   script:
-    - ${RSC_JOB_CMD}
+    - ${RSCI_JOB_CMD}
 
 .perf_on_tuolumne:
   extends: [.perf_job, .on_tuolumne, .custom_perf]
@@ -238,13 +238,13 @@ stages:
   variables:
     SCHEDULER_PARAMETERS: $[[ inputs.tuolumne_perf_alloc ]]
   script:
-    - ${RSC_JOB_CMD}
+    - ${RSCI_JOB_CMD}
 
 .perf_on_lassen:
   extends: [.perf_job, .on_lassen, .custom_perf]
   stage: perf-runs
   script:
-    - lalloc $[[ inputs.lassen_perf_alloc ]] ${RSC_JOB_CMD}
+    - lalloc $[[ inputs.lassen_perf_alloc ]] ${RSCI_JOB_CMD}
 
 ##############################################################################
 # PROCESSING AND REPORTING TEMPLATES
@@ -257,7 +257,7 @@ stages:
     - oslic
   artifacts:
     paths:
-      - $RSC_PERF_ARTIFACT_DIR/
+      - $RSCI_PERF_ARTIFACT_DIR/
   variables:
     GIT_SUBMODULE_STRATEGY: none
 
@@ -271,22 +271,22 @@ stages:
     GIT_SUBMODULE_STRATEGY: none
 
 # Convert to Github Benchmark templates:
-# Projects provide their own ${RSC_PERF_PROCESSING_CMD} script to convert
+# Projects provide their own ${RSCI_PERF_PROCESSING_CMD} script to convert
 # the data to github benchmark format.
 .convert_to_gh_benchmark:
   extends: .results_processing
   script:
     - |
-      for dir in ${RSC_PERF_ARTIFACT_DIR}/*/; do
-        if [ -n "${RSC_PERF_PROCESSING_CMD}" ]; then
+      for dir in ${RSCI_PERF_ARTIFACT_DIR}/*/; do
+        if [ -n "${RSCI_PERF_PROCESSING_CMD}" ]; then
           if [ -d "$dir" ]; then
             echo "Processing results in ${dir}"
             cd ${dir}
-            ${RSC_PERF_PROCESSING_CMD} "${RSC_PERF_RESULTS_FILE}" "${RSC_PERF_PROCESSED_FILE}"
+            ${RSCI_PERF_PROCESSING_CMD} "${RSCI_PERF_RESULTS_FILE}" "${RSCI_PERF_PROCESSED_FILE}"
             cd -
           fi
         else
-          echo "[Warning] Unless processing is not required, RSC_PERF_PROCESSING_CMD should be defined."
+          echo "[Warning] Unless processing is not required, RSCI_PERF_PROCESSING_CMD should be defined."
         fi
       done
 
@@ -303,10 +303,10 @@ stages:
   extends: .results_reporting
   script:
     - |
-      for file in ${RSC_PERF_ARTIFACT_DIR}/*/${RSC_PERF_PROCESSED_FILE}; do
+      for file in ${RSCI_PERF_ARTIFACT_DIR}/*/${RSCI_PERF_PROCESSED_FILE}; do
         if [ -f "$file" ]; then
           # Check if required variables are set
-          if [ -z "$RSC_GITHUB_TOKEN" ] || [ -z "$RSC_GITHUB_PROJECT_ORG" ] || [ -z "$RSC_GITHUB_PROJECT_NAME" ]; then
+          if [ -z "$RSCI_GITHUB_TOKEN" ] || [ -z "$RSCI_GITHUB_PROJECT_ORG" ] || [ -z "$RSCI_GITHUB_PROJECT_NAME" ]; then
             echo "Error: Required GitHub variables not set"
             exit 1
           fi
@@ -317,8 +317,8 @@ stages:
           BENCHMARK_DATA=$(base64 -w 0 "$file")
           RESPONSE_BODY=$(mktemp)
           HTTP_CODE=$(curl --retry 3 --retry-delay 5 --retry-connrefused --max-time 30 -X POST \
-               --url "https://api.github.com/repos/${RSC_GITHUB_PROJECT_ORG}/${RSC_GITHUB_PROJECT_NAME}/actions/workflows/benchmark.yml/dispatches" \
-               --header "Authorization: token $RSC_GITHUB_TOKEN" \
+               --url "https://api.github.com/repos/${RSCI_GITHUB_PROJECT_ORG}/${RSCI_GITHUB_PROJECT_NAME}/actions/workflows/benchmark.yml/dispatches" \
+               --header "Authorization: token $RSCI_GITHUB_TOKEN" \
                --header "Accept: application/vnd.github.v3+json" \
                --header "Content-Type: application/json" \
                --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\" } }" \

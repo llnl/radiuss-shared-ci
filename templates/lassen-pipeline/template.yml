@@ -50,11 +50,11 @@ include:
     file: 'id_tokens.yml'
 
 variables:
-  RSC_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
-  RSC_LASSEN_JOB_ALLOC: "$[[ inputs.job_alloc ]]"
-  RSC_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
-  RSC_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
-  RSC_LLNL_SERVICE_USER: "$[[ inputs.llnl_service_user ]]"
+  RSCI_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
+  RSCI_LASSEN_JOB_ALLOC: "$[[ inputs.job_alloc ]]"
+  RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
+  RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSCI_LLNL_SERVICE_USER: "$[[ inputs.llnl_service_user ]]"
 
 stages:
   - is-machine-up
@@ -88,12 +88,12 @@ stages:
   script:
     - |
       echo -e "\e[7;32m### CI job ${CI_JOB_ID} reproducer on lassen (${SYS_TYPE}) \e[0m"
-      if [[ -n "${RSC_LLNL_SERVICE_USER}" ]]; then echo -e "xsu ${RSC_LLNL_SERVICE_USER}"; fi
+      if [[ -n "${RSCI_LLNL_SERVICE_USER}" ]]; then echo -e "xsu ${RSCI_LLNL_SERVICE_USER}"; fi
       echo -e "
-      working_dir=\"/usr/workspace/\${USER}/${RSC_GITHUB_PROJECT_NAME}/${CI_JOB_ID}-\$(date +%s)\" \n
+      working_dir=\"/usr/workspace/\${USER}/${RSCI_GITHUB_PROJECT_NAME}/${CI_JOB_ID}-\$(date +%s)\" \n
       mkdir -p \${working_dir} && cd \${working_dir} \n
-      git clone https://github.com/${RSC_GITHUB_PROJECT_ORG}/${RSC_GITHUB_PROJECT_NAME}.git --single-branch --depth=1 \n
-      cd ${RSC_GITHUB_PROJECT_NAME} \n
+      git clone https://github.com/${RSCI_GITHUB_PROJECT_ORG}/${RSCI_GITHUB_PROJECT_NAME}.git --single-branch --depth=1 \n
+      cd ${RSCI_GITHUB_PROJECT_NAME} \n
       git fetch origin --depth=1 ${CI_COMMIT_SHA} \n
       git checkout ${CI_COMMIT_SHA} \n
       git submodule update --init --recursive \n"
@@ -108,12 +108,12 @@ stages:
 .lassen_reproducer_job:
   script:
     - |
-      echo -e "lalloc ${RSC_LASSEN_JOB_ALLOC} ${RSC_JOB_CMD}"
+      echo -e "lalloc ${RSCI_LASSEN_JOB_ALLOC} ${RSCI_JOB_CMD}"
       echo -e "\e[7;32m### End of reproducer\e[0m"
 
 .lassen_job_command:
   script:
-    - echo -e ${RSC_JOB_CMD} | xargs lalloc ${RSC_LASSEN_JOB_ALLOC}
+    - echo -e ${RSCI_JOB_CMD} | xargs lalloc ${RSCI_LASSEN_JOB_ALLOC}
 
 # Main job template for Lassen
 # Projects extend this template to define their specific jobs
