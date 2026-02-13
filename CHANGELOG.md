@@ -8,7 +8,15 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 
 ## [Unreleased]
 
-Switch performance pipeline to batch executor for automatic job cancellation.
+### Changed
+
+- Machine check jobs now use the same GitHub status context as their associated child pipeline. This allows the child pipeline's status to override the machine check status when a machine returns to service, preventing multiple success statuses from appearing in GitHub for the same workflow.
+  - BREAKING: Machine check jobs now require the `ASSOCIATED_CHILD_PIPELINE` variable to be set, specifying the name of the associated child pipeline (e.g., "dane-build-and-test").
+  - Status messages shortened for better readability.
+
+### Fixed
+
+- Switch performance pipeline to batch executor for automatic job cancellation.
 
 ## [v2025.12.1 - 2026-01-12 ]
 

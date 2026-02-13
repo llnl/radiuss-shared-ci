@@ -76,6 +76,8 @@ include:
 # Dane (SLURM-based)
 dane-up-check:
   extends: [.dane, .machine-check]
+  variables:
+    ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"
 
 dane-build-and-test:
   needs: [dane-up-check]
@@ -95,6 +97,8 @@ dane-build-and-test:
 # Corona (flux-based)
 corona-up-check:
   extends: [.corona, .machine-check]
+  variables:
+    ASSOCIATED_CHILD_PIPELINE: "corona-build-and-test"
 
 corona-build-and-test:
   needs: [corona-up-check]

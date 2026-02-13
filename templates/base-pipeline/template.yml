@@ -77,6 +77,14 @@ variables:
         echo -e "\e[31mError: CI_MACHINE variable not set\e[0m"
         exit 1
       fi
+      # ASSOCIATED_CHILD_PIPELINE is used for GitHub status context so that a
+      # successful check can be associated with the correct child pipeline in
+      # GitHub. While not strictly required for the machine check itself, it's
+      # important for accurate reporting.
+      if [ -z "$ASSOCIATED_CHILD_PIPELINE" ]; then
+        echo -e "\e[31mError: ASSOCIATED_CHILD_PIPELINE variable not set\e[0m"
+        exit 1
+      fi
 
       # Check if lorenz status file exists
       LORENZ_STATUS_FILE="/usr/global/tools/lorenz/data/loginnodeStatus"
@@ -116,7 +124,7 @@ variables:
               --url "https://api.github.com/repos/$[[ inputs.github_project_org ]]/$[[ inputs.github_project_name ]]/statuses/${CI_COMMIT_SHA}" \
               --header 'Content-Type: application/json' \
               --header "authorization: Bearer $[[ inputs.github_token ]]" \
-              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"GitLab: ${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/${CI_MACHINE}\" }" \
+              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/lc.llnl.gov/${ASSOCIATED_CHILD_PIPELINE}\" }" \
               --output "$STATUS_RESPONSE" \
               --write-out "%{http_code}" \
               --silent \
