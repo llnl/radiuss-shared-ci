@@ -15,8 +15,8 @@
 #   include:
 #     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/variable-as-input-test@v2026.03.0
 #       inputs:
-#         rsci_project_input: $rsci_project_var
-#         rsci_group_input: $rsci_group_var
+#         rsci_project_input: $RSCI_PROJECT_VAR
+#         rsci_group_input: $RSCI_GROUP_VAR
 
 
 spec:
