@@ -6,6 +6,13 @@ The format is based on [Keep a
 Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2026.02.1]
+
+### Fixed
+
+- Added RSCI_ environment variable prefix in for internal variables that come from component inputs to prevent collisions with GitLab globals.
+Note that component input names are unchanged.
+
 ## [v2026.02.0]
 
 ### Changed
@@ -16,8 +23,6 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 
 ### Fixed
 
-- Added RSCI_ environment variable prefix in for internal variables that come from component inputs to prevent collisions with GitLab globals.
-Note that component input names are unchanged.
 - Switch performance pipeline to batch executor for automatic job cancellation.
 
 ## [v2025.12.1 - 2026-01-12 ]
