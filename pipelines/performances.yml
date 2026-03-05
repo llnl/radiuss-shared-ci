@@ -202,7 +202,7 @@ stages:
                --header "Authorization: token $GITHUB_WORKFLOW_TOKEN" \
                --header "Accept: application/vnd.github.v3+json" \
                --header "Content-Type: application/json" \
-               --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\" } }" \
+               --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\", \"commit_sha\": \"${CI_COMMIT_SHA}\" } }" \
                --output "$RESPONSE_BODY" \
                --write-out "%{http_code}" \
                --silent \
