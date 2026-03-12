@@ -12,7 +12,7 @@ Radiuss Shared CI allows project to share CI configuration for GitLab.
 This project is meant to be hosted in a GitLab instance so that other projects
 can use it to configure their CI pipelines.
 
-**As of v2025.12.0**, RADIUSS Shared CI is available as **GitLab CI Components** (requires GitLab 17.0+). This provides:
+**As of v2025.12.0**, RADIUSS Shared CI is available as **GitLab CI Components** (requires GitLab 17.0+). Current version: **v2026.02.2**. This provides:
 
 - **Better versioning** through the GitLab CI/CD Catalog
 - **Type-safe inputs** with validated parameters
@@ -34,14 +34,14 @@ stages:
 
 include:
   # Base pipeline orchestration
-  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2025.12.0
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2026.02.2
     inputs:
       github_project_name: "my-project"
       github_project_org: "LLNL"
       github_token: $GITHUB_TOKEN
 
   # Machine-specific pipeline (choose the machines you need)
-  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/lassen-pipeline@v2025.12.0
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/lassen-pipeline@v2026.02.2
     inputs:
       job_cmd: "./scripts/build-and-test.sh"
       job_alloc: "1 -W 30"
@@ -79,7 +79,7 @@ conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-version: v2025.12.0
+version: v2026.02.2
 
 When a new version of RADIUSS Shared CI is released, we use the current year and month to set the version number,
 followed by a "minor" index which we increase in case we need a hotfix.
