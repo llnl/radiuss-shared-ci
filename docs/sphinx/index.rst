@@ -108,6 +108,7 @@ Cool features provided by RADIUSS Shared CI
    :maxdepth: 3
    :caption: User Documentation
 
+   user_guide/concepts
    user_guide/setup_ci
    user_guide/how_to
 
