@@ -300,7 +300,7 @@ Key Terminology
       expensive child pipelines.
 
    GitHub Token
-      A personal access token with adequate premissions, e.g. ``repo:status``
+      A personal access token with adequate permissions, e.g. ``repo:status``
       to post CI status updates to GitHub.
 
    Job Command (JOB_CMD)
