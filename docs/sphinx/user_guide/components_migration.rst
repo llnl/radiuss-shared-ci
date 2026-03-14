@@ -64,7 +64,7 @@ Step 2: Update Main Pipeline File
      - project: 'lc-templates/id_tokens'
        file: 'id_tokens.yml'
      - project: 'radiuss/radiuss-shared-ci'
-       ref: 'v2025.07.0'
+       ref: 'v2026.02.2'
        file: 'utilities/preliminary-ignore-draft-pr.yml'
      - local: '.gitlab/subscribed-pipelines.yml'
 
@@ -81,13 +81,13 @@ Step 2: Update Main Pipeline File
 
    # .gitlab-ci.yml
    include:
-     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2025.12.0
+     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2026.02.2
        inputs:
          github_project_name: "my-project"
          github_project_org: "LLNL"
          github_token: $GITHUB_TOKEN
 
-     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2025.12.0
+     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2026.02.2
        inputs:
          github_token: $GITHUB_TOKEN
          github_project_name: "my-project"
@@ -142,7 +142,7 @@ Step 3: Update Machine Pipeline Triggers
      trigger:
        include:
          - local: '.gitlab/custom-jobs.yml'
-         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2025.12.0
+         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
            inputs:
              job_cmd: $JOB_CMD
              shared_alloc: "--nodes=1 --exclusive --reservation=ci --time=30"
