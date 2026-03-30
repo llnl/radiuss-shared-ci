@@ -105,6 +105,12 @@ Cool features provided by RADIUSS Shared CI
 * Filter out pipelines coming from a mirrored draft Pull Request (optional).
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Getting Started
+
+   getting-started/index
+
+.. toctree::
    :maxdepth: 3
    :caption: User Documentation
 
