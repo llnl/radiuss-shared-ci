@@ -90,13 +90,11 @@ pipeline calls:
        LOCAL_JOBS_PATH: ".gitlab/jobs"
      script:
        - cat ${RADIUSS_JOBS_PATH}/dane.yml ${LOCAL_JOBS_PATH}/dane.yml > dane-jobs.yml
-       - cat ${RADIUSS_JOBS_PATH}/lassen.yml ${LOCAL_JOBS_PATH}/lassen.yml > lassen-jobs.yml
        - cat ${RADIUSS_JOBS_PATH}/corona.yml ${LOCAL_JOBS_PATH}/corona.yml > corona-jobs.yml
        - cat ${RADIUSS_JOBS_PATH}/tioga.yml ${LOCAL_JOBS_PATH}/tioga.yml > tioga-jobs.yml
      artifacts:
        paths:
          - dane-jobs.yml
-         - lassen-jobs.yml
          - corona-jobs.yml
          - tioga-jobs.yml
 

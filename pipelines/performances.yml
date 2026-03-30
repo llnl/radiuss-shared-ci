@@ -110,21 +110,6 @@ stages:
     - mkdir -p ${PERF_ARTIFACT_DIR}
     - ${JOB_CMD}
 
-.perf_on_lassen:
-  extends: [.perf_job, .custom_perf]
-  stage: perf-runs
-  tags:
-    - shell
-    - lassen
-  rules:
-    - if: '$ON_LASSEN == "OFF"'
-      when: never
-    - when: on_success
-  script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - lalloc ${LASSEN_PERF_ALLOC} ${JOB_CMD}
-
 # Minimal templates for performance processing and reporting jobs
 # Those should be used by projects implementing such jobs.
 .results_processing:

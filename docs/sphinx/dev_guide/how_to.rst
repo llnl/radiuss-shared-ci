@@ -24,8 +24,7 @@ The sub-pipeline definition
 ===========================
 
 To add a new machine, create a corresponding ``pipelines/<machine>.yml`` file
-describing the sub-pipeline. There are two main cases: whether the machine uses
-Slurm/Flux or LSF Spectrum as a scheduler.
+describing the sub-pipeline.
 
 Machines using Slurm/Flux scheduler
 -----------------------------------
@@ -50,23 +49,6 @@ variables:
    The job allocation specied should cover for most job. If you have only a few
    jobs that need longer allocation, you should override them in your local
    jobs and set specific allocation options for them.
-
-Machines using LSF Spectrum scheduler
--------------------------------------
-
-For machines using LSF Spectrum scheduler, use ``lassen`` as a starting point.
-Then replace all the instances of "LASSEN" and "lassen" with the new machine
-name.
-
-Then go to ``customization/custom-jobs-and-variables.yml`` and add the
-variables:
-
-* ``<MACHINE>_JOB_ALLOC`` with allocation options covering for any of the
-  jobs the machine will take.
-
-.. note::
-   Use the values we have for lassen as guides, but adapt the partition and
-   duration coherently with the machine.
 
 Reference the new sub-pipeline
 ==============================
