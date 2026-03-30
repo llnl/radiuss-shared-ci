@@ -127,4 +127,10 @@ Cool features provided by RADIUSS Shared CI
    dev_guide/how_to
    dev_guide/troubleshooting
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
+   reference/index
+
 .. _RADIUSS Spack Configs: https://radiuss-spack-configs.readthedocs.io/en/latest/index.html
