@@ -37,10 +37,6 @@ spec:
       description: >
         Matrix specific CI pipeline component that runs build and test jobs.
         Uses SLURM scheduler with shared allocation optimization.
-    lassen-pipeline:
-      description: >
-        Lassen specific CI pipeline component that runs build and test jobs.
-        Uses LSF scheduler.
     performance-pipeline:
       description: >
         Performance measurement pipeline for running and tracking performance tests

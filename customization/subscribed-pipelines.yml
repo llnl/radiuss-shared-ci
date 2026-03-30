@@ -109,14 +109,12 @@
 #    REMOTE_JOBS_PATH: "<remote/jobs/path>"
 #  script:
 #    - cat ${LOCAL_JOBS_PATH}/dane.yml ${REMOTE_JOBS_PATH}/dane.yml > dane-jobs.yml
-#    - cat ${LOCAL_JOBS_PATH}/lassen.yml ${REMOTE_JOBS_PATH}/lassen.yml > lassen-jobs.yml
 #    - cat ${LOCAL_JOBS_PATH}/corona.yml ${REMOTE_JOBS_PATH}/corona.yml > corona-jobs.yml
 #    - cat ${LOCAL_JOBS_PATH}/tioga.yml ${REMOTE_JOBS_PATH}/tioga.yml > tioga-jobs.yml
 #    - cat ${LOCAL_JOBS_PATH}/tuolumne.yml ${REMOTE_JOBS_PATH}/tuolumne.yml > tuolumne-jobs.yml
 #  artifacts:
 #    paths:
 #      - dane-jobs.yml
-#      - lassen-jobs.yml
 #      - corona-jobs.yml
 #      - tuolumne-jobs.yml
 
@@ -246,29 +244,5 @@ tuolumne-build-and-test:
   extends: [.build-and-test]
   rules:
     - if: '$ON_TUOLUMNE == "OFF"'
-      when: never
-    - when: on_success
-
-# LASSEN
-lassen-up-check:
-  variables:
-    CI_MACHINE: "lassen"
-    ASSOCIATED_CHILD_PIPELINE: "lassen-build-and-test"
-  extends: [.machine-check]
-  rules:
-    - if: '$ON_LASSEN == "OFF"'
-      when: never
-    - when: on_success
-
-lassen-build-and-test:
-  variables:
-    CI_MACHINE: "lassen"
-  needs: [lassen-up-check]
-  ## [Shared jobs scenario]
-  ## (See Umpire CI setup for an example).
-  #needs: [lassen-up-check, generate-job-lists]
-  extends: [.build-and-test]
-  rules:
-    - if: '$ON_LASSEN == "OFF"'
       when: never
     - when: on_success
