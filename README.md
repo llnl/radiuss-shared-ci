@@ -41,7 +41,7 @@ include:
       github_token: $GITHUB_TOKEN
 
   # Machine-specific pipeline (choose the machines you need)
-  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/lassen-pipeline@v2025.12.0
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2025.12.0
     inputs:
       job_cmd: "./scripts/build-and-test.sh"
       job_alloc: "1 -W 30"
@@ -54,7 +54,6 @@ See the [examples/](examples/) directory for complete configuration examples.
 ### Available Components
 
 - **base-pipeline** - Orchestration templates and machine availability checks
-- **lassen-pipeline** - Lassen supercomputer (LSF scheduler)
 - **dane-pipeline** - Dane supercomputer (SLURM scheduler)
 - **matrix-pipeline** - Matrix supercomputer (SLURM scheduler)
 - **corona-pipeline** - Corona supercomputer (flux scheduler)

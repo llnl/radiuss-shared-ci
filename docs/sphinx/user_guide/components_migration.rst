@@ -159,9 +159,9 @@ without modification. They still extend the same templates:
 
 .. code-block:: yaml
 
-   # .gitlab/jobs/lassen.yml (no changes needed)
+   # .gitlab/jobs/dane.yml (no changes needed)
    gcc-build:
-     extends: .job_on_lassen
+     extends: .job_on_dane
      variables:
        COMPILER: "gcc"
 
@@ -190,8 +190,8 @@ split into two files, which are both optional:
 
    # .gitlab/custom-variables.yml
    variables:
-     LASSEN_JOB_ALLOC: "1 -W 30"
-     DANE_SHARED_ALLOC: "-N 1 -p pdebug -t 30"
+     DANE_SHARED_ALLOC: "--reservation=ci --exclusive --nodes=1 --time=30"
+     DANE_JOB_ALLOC: "--reservation=ci --overlap --nodes=1"
      # ... etc
 
 .. note::
@@ -212,7 +212,7 @@ See the ``examples/`` directory in the repository for complete migration example
 
 * ``examples/example-gitlab-ci.yml`` - Complete main CI file using components
 * ``examples/example-custom-jobs.yml`` - Optinoal job templates (child pipelines)
-* ``examples/example-jobs-lassen.yml`` - Machine-specific jobs
+* ``examples/example-jobs-dane.yml`` - Machine-specific jobs
 
 Component Reference
 -------------------
@@ -253,8 +253,8 @@ Machine Pipeline Components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **Components:**
-``lassen-pipeline``, ``dane-pipeline``, ``matrix-pipeline``,
-``corona-pipeline``, ``tioga-pipeline``, ``tuolumne-pipeline``
+``dane-pipeline``, ``matrix-pipeline``, ``corona-pipeline``,
+``tioga-pipeline``, ``tuolumne-pipeline``
 
 Each provides machine-specific CI templates.
 
@@ -264,10 +264,6 @@ Each provides machine-specific CI templates.
 * ``github_project_name`` (required) - GitHub project name
 * ``github_project_org`` (required) - GitHub organization
 * ``llnl_service_user`` (optional) - LLNL service account
-
-**LSF-specific (Lassen):**
-
-* ``job_alloc`` - LSF allocation arguments (e.g., "1 -W 30")
 
 **SLURM/ Flux-specific (Dane, Matrix, Corona, Tioga, Tuolumne):**
 
@@ -338,7 +334,7 @@ Troubleshooting
 Component Not Found
 ^^^^^^^^^^^^^^^^^^^
 
-**Error:** ``Component 'radiuss/radiuss-shared-ci/lassen-pipeline' not found``
+**Error:** ``Component 'radiuss/radiuss-shared-ci/dane-pipeline' not found``
 
 **Solution:** Ensure you're using GitLab 17.0+ and the components have been
 published to the CI/CD Catalog on your GitLab instance.
@@ -354,7 +350,7 @@ of your component include.
 Template Not Found in Child Pipeline
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Error:** ``Job extends template that doesn't exist: .job_on_lassen``
+**Error:** ``Job extends template that doesn't exist: .job_on_dane``
 
 **Solution:** Ensure the machine pipeline component is included in the child pipeline's
 ``trigger: include:`` section, not in the parent pipeline.

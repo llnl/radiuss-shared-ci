@@ -1,0 +1,29 @@
+###############################################################################
+# Copyright (c) 2022-25, Lawrence Livermore National Security, LLC and RADIUSS
+# project contributors. See the COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (MIT)
+###############################################################################
+
+# Example .gitlab/jobs/dane.yml
+#
+# This file defines project-specific jobs for the dane machine.
+# Place this file at .gitlab/jobs/dane.yml in your project.
+
+###############################################################################
+# BUILD AND TEST JOBS
+###############################################################################
+
+# Example job: GCC build
+gcc-build:
+  extends: .job_on_dane
+  variables:
+    COMPILER: "gcc"
+    COMPILER_VERSION: "13.3.1"
+
+# Example job: Clang build
+clang-build:
+  extends: .job_on_dane
+  variables:
+    COMPILER: "clang"
+    COMPILER_VERSION: "19.1.3"

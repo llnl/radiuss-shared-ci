@@ -50,11 +50,6 @@ spec:
       description: "Flux batch arguments for job allocation on Tuolumne"
       default: ""
 
-    lassen_perf_alloc:
-      type: string
-      description: "Lalloc arguments for job allocation on Lassen"
-      default: ""
-
     perf_processing_cmd:
       type: string
       description: "Command to process performance results"
@@ -189,17 +184,6 @@ stages:
       when: never
     - when: on_success
 
-.on_lassen:
-  tags:
-    - shell
-    - lassen
-  rules:
-    - if: '$ON_LASSEN == "OFF"'
-      when: never
-    - if: '"$[[ inputs.lassen_perf_alloc ]]" == ""'
-      when: never
-    - when: on_success
-
 .perf_on_dane:
   extends: [.perf_job, .on_dane, .custom_perf]
   stage: perf-runs
@@ -239,12 +223,6 @@ stages:
     SCHEDULER_PARAMETERS: $[[ inputs.tuolumne_perf_alloc ]]
   script:
     - ${RSCI_JOB_CMD}
-
-.perf_on_lassen:
-  extends: [.perf_job, .on_lassen, .custom_perf]
-  stage: perf-runs
-  script:
-    - lalloc $[[ inputs.lassen_perf_alloc ]] ${RSCI_JOB_CMD}
 
 ##############################################################################
 # PROCESSING AND REPORTING TEMPLATES
