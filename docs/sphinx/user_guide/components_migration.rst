@@ -211,7 +211,7 @@ Complete Example
 See the ``examples/`` directory in the repository for complete migration examples:
 
 * ``examples/example-gitlab-ci.yml`` - Complete main CI file using components
-* ``examples/example-custom-jobs.yml`` - Optinoal job templates (child pipelines)
+* ``examples/example-custom-jobs.yml`` - Optional job templates (child pipelines)
 * ``examples/example-jobs-dane.yml`` - Machine-specific jobs
 
 Component Reference
