@@ -38,9 +38,6 @@ Core Components
    * - **base-pipeline**
      - Orchestration templates, machine checks, GitHub integration
      - ``github_project_name``, ``github_project_org``
-   * - **lassen-pipeline**
-     - Build/test jobs on Lassen (LSF scheduler)
-     - ``job_cmd``, ``job_alloc``, ``github_project_name``, ``github_project_org``
    * - **dane-pipeline**
      - Build/test jobs on Dane (SLURM scheduler)
      - ``job_cmd``, ``shared_alloc``, ``job_alloc``, ``github_project_name``, ``github_project_org``
@@ -320,8 +317,8 @@ Each machine component exports:
 Examples:
 
 - ``.job_on_dane``
-- ``.job_on_lassen``
-- ``.job_on_corona``
+- ``.job_on_matrix``
+- ``.job_on_tioga``
 
 From performance-pipeline
 ==========================

@@ -136,9 +136,6 @@ Machine Abstraction Layer
 RADIUSS Shared CI provides components for different LC machines, abstracting
 their scheduler differences to some extent:
 
-**LSF Spectrum (Lassen)**:
-  Uses ``bsub`` and ``jsrun`` for job submission.
-
 **SLURM (Dane, Matrix)**:
   Uses ``salloc`` for shared allocations and ``srun`` for jobs.
 
@@ -345,7 +342,7 @@ Architecture Diagram
    │  │     └─ intel-build ────────────────┼─┤
    │  └─────────────────────────────────┘  │ │
    │                                       │ │
-   │  (Similar for lassen, corona, etc.)   │ │
+   │  (Similar for matrix, tioga, etc.)    │ │
    └───────────────────────────────────────┘ │
                                              │
    ┌─────────────────────────────────────────┘
