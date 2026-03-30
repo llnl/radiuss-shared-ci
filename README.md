@@ -44,7 +44,8 @@ include:
   - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2025.12.0
     inputs:
       job_cmd: "./scripts/build-and-test.sh"
-      job_alloc: "1 -W 30"
+      shared_alloc: "--reservation=ci --exclusive --nodes=1 --time=30"
+      job_alloc: "--reservation=ci --overlap --nodes=1"
       github_project_name: "my-project"
       github_project_org: "LLNL"
 ```
