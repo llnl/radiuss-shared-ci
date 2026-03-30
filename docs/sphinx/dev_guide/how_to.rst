@@ -24,8 +24,7 @@ The sub-pipeline definition
 ===========================
 
 To add a new machine, create a corresponding ``pipelines/<machine>.yml`` file
-describing the sub-pipeline. There are two main cases: whether the machine uses
-Slurm/Flux or LSF Spectrum as a scheduler.
+describing the sub-pipeline.
 
 Machines using Slurm/Flux scheduler
 -----------------------------------
