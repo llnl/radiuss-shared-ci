@@ -118,6 +118,8 @@ Cool features provided by RADIUSS Shared CI
    user_guide/quick-reference
    user_guide/setup_ci
    user_guide/how_to
+   user_guide/troubleshooting
+   user_guide/faq
 
 .. toctree::
    :maxdepth: 3
