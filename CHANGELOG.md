@@ -9,6 +9,7 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 ## [v2026.XX.X]
 
 - Remove lassen machine from configuration and documentation.
+- Remove shared allocations from Flux machine pipelines so Corona, Tioga, and Tuolumne jobs each submit their own batch allocation.
 
 ## [v2026.02.2]
 

@@ -9,14 +9,13 @@
 # GitLab CI Component: Corona Pipeline
 #
 # This component provides CI pipeline templates for running jobs on the
-# Corona supercomputer using the flux scheduler with shared allocation support.
+# Corona supercomputer using the flux scheduler.
 #
 # Usage:
 #   include:
 #     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/corona-pipeline@v2025.12.0
 #       inputs:
 #         job_cmd: "./scripts/build-and-test.sh"
-#         shared_alloc: "-N 1 -t 30m"
 #         job_alloc: "-N 1 -t 10m"
 #         github_project_name: "my-project"
 #         github_project_org: "LLNL"
@@ -26,11 +25,6 @@ spec:
     job_cmd:
       type: string
       description: "Command to execute for build and test"
-
-    shared_alloc:
-      type: string
-      description: "flux alloc arguments for shared allocation (or OFF to disable)"
-      default: ""
 
     job_alloc:
       type: string
@@ -49,11 +43,6 @@ spec:
       description: "LLNL service user account for CI"
       default: ""
 
-    alloc_name:
-      type: string
-      description: "Name for shared resource allocation"
-      default: "ALLOC_${CI_PIPELINE_ID}"
-
 ---
 # Sets ID tokens for every job using `default:`
 include:
@@ -62,20 +51,16 @@ include:
 
 variables:
   RSCI_JOB_CMD: "$[[ inputs.job_cmd | expand_vars ]]"
-  RSCI_CORONA_SHARED_ALLOC: "$[[ inputs.shared_alloc ]]"
   RSCI_CORONA_JOB_ALLOC: "$[[ inputs.job_alloc ]]"
   RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
   RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
   RSCI_LLNL_SERVICE_USER: "$[[ inputs.llnl_service_user ]]"
-  RSCI_ALLOC_NAME: "$[[ inputs.alloc_name ]]"
 
 stages:
   - is-machine-up
-  - allocate-resources
   - jobs-stage-1
   - jobs-stage-2
   - jobs-stage-3
-  - release-resources
 
 ##############################################################################
 # UTILITIES
@@ -91,12 +76,6 @@ stages:
     # Advanced jobs can only run on main, develop or if ALL_TARGETS is ON
     - if: '$ADVANCED_JOB == "ON" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop" && $ALL_TARGETS != "ON"'
       when: never
-    # Do not allocate resource if the required variable is set to OFF
-    - if: '$CI_JOB_NAME =~ /resources/ && $RSCI_CORONA_SHARED_ALLOC == "OFF"'
-      when: never
-    # We should always release resources allocated in the pipeline
-    - if: '$CI_JOB_NAME =~ /release_resources/'
-      when: always
     # Default: run on success
     - when: on_success
 
@@ -133,47 +112,15 @@ stages:
 
 .corona_job_command:
   script:
-    - ${PROXY} flux watch $( echo -e ${RSCI_JOB_CMD} | xargs ${PROXY} flux batch -o output.stdout.type=kvs ${RSCI_CORONA_JOB_ALLOC} )
+    - flux watch $( echo -e ${RSCI_JOB_CMD} | xargs flux batch -o output.stdout.type=kvs ${RSCI_CORONA_JOB_ALLOC} )
 
 .job_on_corona:
   extends: [.custom_job, .on_corona]
   stage: jobs-stage-1
   script:
-    # Allocation information
-    - |
-      ALLOC_ID=$(flux jobs --name="${RSCI_ALLOC_NAME}" -n -o "{id}")
-      echo -e "[Information]: Shared allocation ID = ${ALLOC_ID}"
-      PROXY="$( [[ -n "${ALLOC_ID}" ]] && echo "flux proxy ${ALLOC_ID}" || echo "" )"
     # Print a reproducer
     - !reference [.corona_reproducer_init, script]
     - !reference [.corona_reproducer_vars, script]
     - !reference [.corona_reproducer_job, script]
     # The actual launch command
     - !reference [.corona_job_command, script]
-
-##############################################################################
-# RESOURCE MANAGEMENT JOBS
-
-# In pre-build phase, allocate a node for builds
-allocate_resources:
-  variables:
-    GIT_STRATEGY: none
-  extends: .on_corona
-  stage: allocate-resources
-  script:
-    - |
-      set -x
-      flux --parent alloc ${RSCI_CORONA_SHARED_ALLOC} --job-name=${RSCI_ALLOC_NAME} --bg
-
-# In post-build phase, deallocate resources
-# This runs even on failure using the rule in .on_corona
-release_resources:
-  variables:
-    GIT_STRATEGY: none
-  extends: .on_corona
-  stage: release-resources
-  script:
-    - |
-      set -x
-      export URI=$(flux jobs -o "{id} {name}" | grep ${RSCI_ALLOC_NAME} | awk '{print $1}')
-      ([[ -n "${URI}" ]] && flux cancel ${URI} || exit 0)

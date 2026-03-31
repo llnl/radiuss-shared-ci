@@ -233,9 +233,9 @@ details can be found in the file itself.
  ========================================== ==========================================================================================================================
   Parameter                                  Description
  ========================================== ==========================================================================================================================
-  ``ALLOC_NAME``                             Name of the shared allocation. Should be unique, our default should be fine.
-  ``<MACHINE>_SHARED_ALLOC``                 Optional: Parameters for the shared allocation. You may extend the resource and time.
-  ``<MACHINE>_JOB_ALLOC``                    Parameters for the job allocation. You may extend the resource and time within the scope of the shared allocation.
+  ``ALLOC_NAME``                             Name of the shared allocation used by the legacy SLURM pipelines. Our default should be fine.
+  ``<SLURM_MACHINE>_SHARED_ALLOC``          Optional: Parameters for the SLURM shared allocation. This currently applies to Dane and Matrix.
+  ``<MACHINE>_JOB_ALLOC``                    Parameters for the job allocation. Flux machines use this for standalone job allocations; SLURM machines use it inside the shared allocation.
   ``PROJECT_<MACHINE>_VARIANTS``             Global variants to be added to all the shared specs.
   ``PROJECT_<MACHINE>_DEPS``                 Global dependencies to be added to all the shared specs.
  ========================================== ==========================================================================================================================

@@ -148,10 +148,11 @@ practice to define your scripts outside the CI YAML files.
 However, it may appear restrictive to only allow one-stage pipelines.
 
 In facts, the RADIUSS Shared CI defines 3 stages for you to use. They are named
-``jobs-stage-<1,2,3>``. They stand between the ``allocate-resources`` and the
-``release-resources`` stages, which means that jobs will run within the shared
-allocation as long as they inherit from the shared job template (``extends:
-.job_on_<machine>``).
+``jobs-stage-<1,2,3>``. Jobs inheriting from the shared job template
+(``extends: .job_on_<machine>``) run in one of these stages. In the legacy
+SLURM pipelines, these stages stand between the ``allocate-resources`` and
+``release-resources`` stages. In the Flux pipelines, each job submits its own
+standalone batch allocation from the selected jobs stage.
 
 In your local jobs definition, you may pick the stage with the key
 ``stages: jobs-stage-<1,2,3>``. This will override the default value set in the

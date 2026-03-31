@@ -7,9 +7,10 @@
 
 # We define the following GitLab pipeline variables:
 variables:
-# In some pipelines we create only one allocation shared among jobs in
+# Some pipelines create one allocation shared among jobs in
 # order to save time and resources. This allocation has to be uniquely
 # named so that we are sure to retrieve it and avoid collisions.
+# This is used by the legacy SLURM pipelines.
   ALLOC_NAME: ${CI_PROJECT_NAME}_ci_${CI_PIPELINE_ID}
 
 # Dane
@@ -35,36 +36,24 @@ variables:
 #  MATRIX_MY_VAR: "..."
 
 # Corona
-# Arguments for top level allocation
-# Note: can be set to "OFF" to prevent allocation sharing.
-# OPTIONAL: "-o per-resource.count=2" allows to get 2 jobs running on each node.
-  CORONA_SHARED_ALLOC: "--exclusive --time-limit=15m --nodes=1 -o per-resource.count=2"
-# Arguments for job level allocation
-  CORONA_JOB_ALLOC: "--nodes=1 --begin-time=+5s"
+# Arguments for job allocation
+  CORONA_JOB_ALLOC: "--exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Arguments for performance job allocation (dedicated allocation with no overlapping).
   CORONA_PERF_ALLOC: "--exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Add variables that should apply to all the jobs on a machine:
 #  CORONA_MY_VAR: "..."
 
 # Tioga
-# Arguments for top level allocation
-# Note: can be set to "OFF" to prevent allocation sharing.
-# OPTIONAL: "-o per-resource.count=2" allows to get 2 jobs running on each node.
-  TIOGA_SHARED_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 -o per-resource.count=2"
-# Arguments for job level allocation
-  TIOGA_JOB_ALLOC: "--nodes=1 --begin-time=+5s"
+# Arguments for job allocation
+  TIOGA_JOB_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Arguments for performance job allocation (dedicated allocation with no overlapping).
   TIOGA_PERF_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Add variables that should apply to all the jobs on a machine:
 #  TIOGA_MY_VAR: "..."
 
 # Tuolumne
-# Arguments for top level allocation
-# Note: can be set to "OFF" to prevent allocation sharing.
-# OPTIONAL: "-o per-resource.count=2" allows to get 2 jobs running on each node.
-  TUOLUMNE_SHARED_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 -o per-resource.count=2"
-# Arguments for job level allocation
-  TUOLUMNE_JOB_ALLOC: "--nodes=1 --begin-time=+5s"
+# Arguments for job allocation
+  TUOLUMNE_JOB_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Arguments for performance job allocation (dedicated allocation with no overlapping).
   TUOLUMNE_PERF_ALLOC: "--queue=pci --exclusive --time-limit=15m --nodes=1 --begin-time=+5s"
 # Add variables that should apply to all the jobs on a machine:

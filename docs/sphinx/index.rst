@@ -101,7 +101,7 @@ Cool features provided by RADIUSS Shared CI
 * Projects can extend their pipeline at will with additional stages.
 * Print an exact reproducer in the logs.
 * Provide a template for a pipeline dedicated to performance measurements.
-* Optimize machine usage with shared allocation (optional).
+* Use machine-appropriate allocation strategies, including optional shared allocations on SLURM systems.
 * Filter out pipelines coming from a mirrored draft Pull Request (optional).
 
 .. toctree::

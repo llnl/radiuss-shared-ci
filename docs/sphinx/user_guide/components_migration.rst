@@ -265,11 +265,17 @@ Each provides machine-specific CI templates.
 * ``github_project_org`` (required) - GitHub organization
 * ``llnl_service_user`` (optional) - LLNL service account
 
-**SLURM/ Flux-specific (Dane, Matrix, Corona, Tioga, Tuolumne):**
+**Scheduler-specific inputs:**
+
+**SLURM components (``dane-pipeline``, ``matrix-pipeline``):**
 
 * ``shared_alloc`` - Shared allocation args or "OFF"
 * ``job_alloc`` - Per-job allocation args
 * ``alloc_name`` - Name for shared allocation
+
+**Flux components (``corona-pipeline``, ``tioga-pipeline``, ``tuolumne-pipeline``):**
+
+* ``job_alloc`` - Per-job allocation args for standalone ``flux batch`` jobs
 
 **Exported Templates:**
 

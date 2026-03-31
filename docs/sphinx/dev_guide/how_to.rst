@@ -36,12 +36,13 @@ new machine name.
 Then go to ``customization/custom-jobs-and-variables.yml`` and add the
 variables:
 
-* ``<MACHINE>_SHARED_ALLOC`` with allocation options sufficient for the shared
-  allocation (``salloc``, ``flux --parent alloc``) to cover for all the jobs.
-* ``<MACHINE>_JOB_ALLOC`` with allocation options for any of the
-  jobs (srun) the machine will take. The job will run under the shared
-  allocation. Lastly, do not prescribe a number of cores here, as they should
-  be defined at Spack and Make/CMake level.
+* ``<MACHINE>_SHARED_ALLOC`` for machines that use a shared top-level
+  allocation (currently the legacy SLURM pipelines).
+* ``<MACHINE>_JOB_ALLOC`` with allocation options for each build/test job.
+  Flux pipelines submit each job as its own batch allocation, while the legacy
+  SLURM pipelines run each job inside the shared allocation. Lastly, do not
+  prescribe a number of cores here, as they should be defined at Spack and
+  Make/CMake level.
 
 .. note::
    Use the values we have for dane and corona as guides, but adapt the
@@ -71,4 +72,3 @@ and merge it. We may create a new tag although it is not required for a new
 machine. Indeed, using a new machine is a opt-in change for users: they will
 have to activate it in ``customization/subscribed-pipelines.yml`` the same way
 you did above (which only is a suggested template).
-

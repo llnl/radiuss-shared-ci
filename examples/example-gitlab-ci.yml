@@ -108,8 +108,7 @@ corona-build-and-test:
       - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/corona-pipeline@v2025.12.0
         inputs:
           job_cmd: $JOB_CMD
-          shared_alloc: "--nodes=1 --exclusive --time-limit=30m -o per-resource.count=2"
-          job_alloc: "--nodes=1 --begin-time=+5s"
+          job_alloc: "--nodes=1 --exclusive --time-limit=30m --begin-time=+5s"
           github_project_name: $GITHUB_PROJECT_NAME
           github_project_org: $GITHUB_PROJECT_ORG
       # OPTIONAL - local: '.gitlab/custom-jobs.yml'

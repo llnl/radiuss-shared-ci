@@ -20,15 +20,15 @@ spec:
     corona-pipeline:
       description: >
         Corona specific CI pipeline component that runs build and test jobs.
-        Uses flux scheduler with shared allocation optimization.
+        Uses flux scheduler with per-job batch allocations.
     tioga-pipeline:
       description: >
         Tioga specific CI pipeline component that runs build and test jobs.
-        Uses flux scheduler with shared allocation optimization.
+        Uses flux scheduler with per-job batch allocations.
     tuolumne-pipeline:
       description: >
         Tuolumne specific CI pipeline component that runs build and test jobs.
-        Uses flux scheduler with shared allocation optimization.
+        Uses flux scheduler with per-job batch allocations.
     dane-pipeline:
       description: >
         Dane specific CI pipeline component that runs build and test jobs.
