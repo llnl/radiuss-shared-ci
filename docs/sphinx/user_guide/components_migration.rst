@@ -1,14 +1,42 @@
+.. _components-migration:
+
+===================================
 Migrating to GitLab CI Components
 ===================================
 
-Starting with v2025.12.0, RADIUSS Shared CI provides GitLab CI Components as the
-recommended way to consume shared CI configuration. This guide will help you migrate
-from the legacy include-based approach to the new component-based architecture.
+This guide helps you migrate from the legacy include-based approach to
+GitLab CI Components.
+
+.. note::
+   **New to RADIUSS Shared CI?** You don't need this guide. See
+   :doc:`../getting-started/five-minute-setup` instead.
+
+Quick Migration Checklist
+--------------------------
+
+.. list-table::
+   :widths: 10 90
+   :header-rows: 0
+
+   * - ☐
+     - Verify GitLab 17.0+ (check at https://lc.llnl.gov/gitlab/help)
+   * - ☐
+     - Add stages to ``.gitlab-ci.yml`` (components don't define them)
+   * - ☐
+     - Replace ``include: project:`` with ``component:`` directives
+   * - ☐
+     - Split ``custom-jobs-and-variables.yml`` into two files
+   * - ☐
+     - Update machine pipeline triggers to use components
+   * - ☐
+     - Test on a branch before merging
+   * - ☐
+     - Update documentation/README if you have migration notes
 
 Prerequisites
 -------------
 
-* GitLab 17.0 or later
+* GitLab 17.0 or later (required for components)
 * Familiarity with your current CI setup
 * Access to your project's ``.gitlab-ci.yml`` and ``.gitlab/`` directory
 
@@ -367,10 +395,38 @@ remains available and supported. Projects can continue using this approach if:
 
 Both approaches will only be maintained in parallel for this release.
 
+==================
+Testing Migration
+==================
+
+Before merging, test your migration:
+
+1. **Create a test branch:**
+
+   .. code-block:: bash
+
+      git checkout -b test-component-migration
+
+2. **Make changes** following the steps above
+
+3. **Push and verify:**
+
+   .. code-block:: bash
+
+      git push origin test-component-migration
+
+4. **Check GitLab pipeline:**
+
+   - Verify all stages appear correctly
+   - Check machine check jobs run
+   - Verify child pipelines trigger
+   - Check GitHub status updates appear
+
 Getting Help
 ------------
 
-* Check the `examples/` directory for working configurations
-* Review component documentation in the GitLab CI/CD Catalog
-* Consult the main documentation at https://radiuss-shared-ci.readthedocs.io
-* Open an issue at https://github.com/LLNL/radiuss-shared-ci/issues
+* **Quick reference**: :doc:`quick-reference`
+* **Component details**: :doc:`../reference/components/index`
+* **Setup guide**: :doc:`setup-with-components`
+* **Examples**: Check the ``examples/`` directory in the repository
+* **Issues**: https://github.com/LLNL/radiuss-shared-ci/issues
