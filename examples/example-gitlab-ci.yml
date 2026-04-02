@@ -37,7 +37,7 @@ variables:
   # GitHub integration (required for status reporting)
   GITHUB_PROJECT_NAME: "my-project"
   GITHUB_PROJECT_ORG: "LLNL"
-  # GITHUB_TOKEN should be set as a CI/CD variable in GitLab settings
+  # GITHUB_STATUS_TOKEN should be set as a CI/CD variable in GitLab settings
 
   # Build configuration
   GIT_SUBMODULE_STRATEGY: recursive
@@ -57,12 +57,12 @@ include:
     inputs:
       github_project_name: $GITHUB_PROJECT_NAME
       github_project_org: $GITHUB_PROJECT_ORG
-      github_token: $GITHUB_TOKEN
+      github_token: $GITHUB_STATUS_TOKEN
 
   # Optional: Draft PR filter
   - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2026.02.2
     inputs:
-      github_token: $GITHUB_TOKEN
+      github_token: $GITHUB_STATUS_TOKEN
       github_project_name: $GITHUB_PROJECT_NAME
       github_project_org: $GITHUB_PROJECT_ORG
 
@@ -135,13 +135,13 @@ performance-measurements:
         inputs:
           job_cmd: "./scripts/run-benchmarks.sh"
           dane_perf_alloc: "--nodes=1 --exclusive --reservation=ci --time=15"
-          matrix_perf_alloc: "--nodes=1 --exclusive --partition=pdebug --time=15"
-          tioga_perf_alloc: "--nodes=1 --exclusive --time-limit=15m"
-          tuolumne_perf_alloc: "--nodes=1 --exclusive --time-limit=15m"
+          matrix_perf_alloc: "--nodes=1 --exclusive --partition=pci --time=15"
+          tioga_perf_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=15m"
+          tuolumne_perf_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=15m"
           # No perf alloc information for corona: the perf jobs will not run on corona.
-          github_token: $GITHUB_TOKEN
+          github_token: $GITHUB_STATUS_TOKEN
           github_project_name: $GITHUB_PROJECT_NAME
           github_project_org: $GITHUB_PROJECT_ORG
-      # OPTIONAL - local: '.gitlab/custom-jobs.yml'
-      - local: '.gitlab/custom-jobs.yml'
+      # OPTIONAL: Uncomment if you have custom job templates
+      # - local: '.gitlab/custom-jobs.yml'
       - local: '.gitlab/jobs/performances.yml'
