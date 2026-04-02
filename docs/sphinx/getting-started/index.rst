@@ -47,10 +47,10 @@ What's Next?
 
 After completing the getting started guides, you can:
 
-- **Customize your setup**: :doc:`../user_guide/setup-with-components` (once created)
-- **Add more machines**: :doc:`../user_guide/how_to`
-- **Enable performance testing**: :doc:`../user_guide/quick-reference`
-- **Learn advanced patterns**: :doc:`../cookbook/index` (once created)
+- **Customize your setup**: :doc:`../user_guide/setup-with-components`
+- **Update version**: :doc:`../user_guide/how_to`
+- **Enable performance testing**: :doc:`../reference/components/performance-pipeline`
+- **Get help**: :doc:`../user_guide/troubleshooting` and :doc:`../user_guide/faq`
 
 .. toctree::
    :maxdepth: 2

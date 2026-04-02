@@ -243,3 +243,12 @@ Visit ``https://lc.llnl.gov/gitlab/<group>/<project>/-/settings/ci_cd``
 .. _sharing spack configuration files: https://github.com/LLNL/radiuss-spack-configs
 .. _RADIUSS Spack Configs: https://radiuss-spack-configs.readthedocs.io/en/latest/index.html
 .. _GitLab documentation: https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/github_integration.html#connect-with-personal-access-token
+
+========
+See Also
+========
+
+- :doc:`setup-with-components` - Modern component-based approach
+- :doc:`components_migration` - Migration guide
+- :doc:`how_to` - Common tasks
+- :doc:`troubleshooting` - Troubleshooting guide

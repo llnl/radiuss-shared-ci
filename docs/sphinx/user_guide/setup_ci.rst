@@ -77,3 +77,12 @@ See :doc:`../getting-started/choosing-your-path` for guidance on:
 - Whether to use components or legacy approach
 - When to add performance testing
 - Utility component decisions
+
+========
+See Also
+========
+
+- :doc:`setup-with-components` - Component-based setup guide
+- :doc:`setup-legacy` - Legacy setup guide
+- :doc:`../getting-started/five-minute-setup` - Quick start
+- :doc:`how_to` - Common tasks

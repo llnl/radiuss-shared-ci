@@ -127,6 +127,7 @@ Cool features provided by RADIUSS Shared CI
 
    dev_guide/radiuss_ci_explained
    dev_guide/how_to
+   dev_guide/contributing
    dev_guide/troubleshooting
 
 .. toctree::
