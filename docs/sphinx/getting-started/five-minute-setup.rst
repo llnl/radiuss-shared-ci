@@ -105,8 +105,8 @@ Create ``.gitlab-ci.yml`` in your project root:
          - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
            inputs:
              job_cmd: $JOB_CMD
-             shared_alloc: "--nodes=1 --exclusive --time=30"
-             job_alloc: "--nodes=1"
+             shared_alloc: "--reservation=ci --nodes=1 --exclusive --time=30"
+             job_alloc: "--reservation=ci --nodes=1"
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
              llnl_service_user: $LLNL_SERVICE_USER

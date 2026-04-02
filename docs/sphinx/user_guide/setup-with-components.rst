@@ -452,8 +452,8 @@ Full `.gitlab-ci.yml` with multiple machines:
          - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
            inputs:
              job_cmd: $JOB_CMD
-             shared_alloc: "--nodes=1 --exclusive --time=30"
-             job_alloc: "--nodes=1"
+             shared_alloc: "--reservation=ci --nodes=1 --exclusive --time=30"
+             job_alloc: "--reservation=ci --nodes=1"
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
          - local: '.gitlab/jobs/dane.yml'
@@ -472,8 +472,8 @@ Full `.gitlab-ci.yml` with multiple machines:
          - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/matrix-pipeline@v2026.02.2
            inputs:
              job_cmd: $JOB_CMD
-             shared_alloc: "--nodes=1 --exclusive --time=30"
-             job_alloc: "--nodes=1"
+             shared_alloc: "--partition=pci --nodes=1 --exclusive --time=30"
+             job_alloc: "--partition=pci --nodes=1"
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
          - local: '.gitlab/jobs/matrix.yml'
@@ -492,8 +492,8 @@ Full `.gitlab-ci.yml` with multiple machines:
          - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/tioga-pipeline@v2026.02.2
            inputs:
              job_cmd: $JOB_CMD
-             shared_alloc: "--nodes=1 --exclusive --time-limit=30m"
-             job_alloc: "--nodes=1 --begin-time=+5s"
+             shared_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=30m"
+             job_alloc: "--queue=pci --nodes=1 --begin-time=+5s"
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
          - local: '.gitlab/jobs/tioga.yml'

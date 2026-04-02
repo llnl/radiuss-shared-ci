@@ -319,9 +319,9 @@ Basic setup:
          - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/performance-pipeline@v2026.02.2
            inputs:
              job_cmd: "./scripts/run-benchmarks.sh"
-             dane_perf_alloc: "--nodes=1 --exclusive --time=30"
+             dane_perf_alloc: "--reservation=ci --nodes=1 --exclusive --time=30"
              perf_processing_cmd: "./scripts/process-results.py"
-             github_token: $GITHUB_TOKEN
+             github_token: $GITHUB_STATUS_TOKEN
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
          - local: '.gitlab/jobs/performances.yml'
