@@ -28,6 +28,7 @@ Browse Components
    :maxdepth: 2
 
    components/index
+   glossary
 
 ==================
 Quick Component List
