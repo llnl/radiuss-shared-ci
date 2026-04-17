@@ -15,6 +15,8 @@ Choosing Your Path
 After completing the :doc:`five-minute-setup`, this guide helps you decide
 which machines, components, and features to enable for your project.
 
+.. _components-vs-legacy:
+
 ========================
 Quick Decision Tree
 ========================

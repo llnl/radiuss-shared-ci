@@ -111,6 +111,8 @@ Set these in ``.gitlab-ci.yml`` or ``.gitlab/custom-variables.yml``:
      - How to handle submodules
      - ``recursive`` or ``none``
 
+.. _machine-control-variables:
+
 Machine Control Variables
 ==========================
 
@@ -169,21 +171,38 @@ Disable shared allocation:
    For complete input tables and exported template lists, see
    :doc:`../reference/components/index`.
 
+.. _github-token-scopes:
+
 ===========================
 GitHub Token Setup
 ===========================
 
+Required scopes vary by feature. Create a dedicated token per use case:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 20 45
+
+   * - Purpose
+     - Required Scopes
+     - Notes
+   * - **Status Reporting** (required)
+     - ``repo:status``
+     - Set as ``GITHUB_STATUS_TOKEN``; used every pipeline run
+   * - **Performance Reporting** (optional)
+     - ``repo``, ``workflow``
+     - For posting benchmark results to GitHub
+   * - **GitHub Integration Setup** (one-time)
+     - ``admin:repo_hook``, ``repo``
+     - Used when first connecting LC GitLab to GitHub
+
+.. warning::
+   Tokens must have a lifetime of no more than 30 days per LLNL policy.
+
 1. **Generate Token**:
 
    - Go to GitHub Settings → Developer settings → Personal access tokens
-   - Create token with adequate permissions
-
-.. notes::
-   Depending on the features you use, you may need different scopes.
-   We recommend creating one token per use case to limit permissions:
-    - For status updates and PR filtering: ``repo:status`` scope
-    - For performance reporting: ``repo:`` and ``workflow:`` scopes
-    - For mirroring (used in UI): ``repo:`` and ``admin:repo_hook`` scopes
+   - Create token with the scopes for your use case
 
 2. **Add to GitLab**:
 

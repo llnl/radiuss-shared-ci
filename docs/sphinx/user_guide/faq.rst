@@ -56,28 +56,13 @@ Components vs Legacy
 Should I use components or legacy approach?
 ===========================================
 
-**Use components if:**
-
-- GitLab version is 17.0 or later
-- Starting new setup
-- Want type-checked inputs
-- Prefer clearer syntax
-
-**Use legacy if:**
-
-- GitLab version < 17.0
-- Already have working legacy setup
-- Not ready to migrate yet
-
-See :doc:`setup-with-components` and :doc:`setup-legacy` for details on each approach.
+See :ref:`components-vs-legacy` in the Choosing Your Path guide for the
+decision tree.
 
 Can I migrate from legacy to components?
 =========================================
 
-Yes. See :doc:`components_migration` for step-by-step guide.
-
-Both approaches work with same version. You can test components on a branch
-before migrating your main configuration.
+Yes. See :doc:`components_migration` for a step-by-step guide.
 
 Will legacy approach be maintained?
 ====================================
@@ -111,23 +96,8 @@ job file in ``.gitlab/jobs/``. No changes needed to existing machines.
 Can I disable a machine temporarily?
 =====================================
 
-Yes. Set the ``ON_<MACHINE>`` variable to ``"OFF"``:
-
-.. code-block:: yaml
-
-   variables:
-     ON_DANE: "OFF"  # Disables Dane CI
-
-Available variables:
-
-- ``ON_DANE``
-- ``ON_MATRIX``
-- ``ON_CORONA``
-- ``ON_TIOGA``
-- ``ON_TUOLUMNE``
-
-This works with both component-based and legacy setups. The machine check and
-pipeline jobs include rules that check these variables.
+Yes. Set the corresponding ``ON_<MACHINE>`` variable to ``"OFF"``. See
+:ref:`machine-control-variables` for the full variable list.
 
 ===========
 Allocations
@@ -320,38 +290,8 @@ See :doc:`troubleshooting` for detailed debugging.
 What permissions does the GitHub token need?
 =============================================
 
-Setting up RADIUSS Shared CI requires different GitHub token scopes for different purposes.
-We recommend creating dedicated Personal Access Tokens for each use case:
-
-**1. GitHub Integration Setup**
-
-- **Scopes required:** ``admin:repo_hook``, ``repo``
-- **Used for:** Configuring GitHub integration in LC GitLab instance
-- **Used when:** Initial setup (one-time configuration)
-- **Set as:** Used directly in GitLab project settings
-
-**2. Status Reporting (Required)**
-
-- **Scopes required:** ``repo:status``
-- **Used for:** Reporting machine availability and build/test results to GitHub
-- **Used when:** Every CI pipeline run
-- **Set as:** ``GITHUB_STATUS_TOKEN`` variable in GitLab CI/CD settings
-- **Must be:** Protected and masked
-
-**3. Performance Reporting (Optional)**
-
-- **Scopes required:** ``repo``, ``workflow``
-- **Used for:** Pushing performance benchmark results to GitHub
-- **Used when:** Performance pipeline runs
-- **Set as:** Variable in GitLab CI/CD settings (can use same token as status reporting if scopes combined)
-- **Must be:** Protected and masked
-
-.. note::
-   You can create separate tokens for each purpose or combine scopes into one token.
-   For most projects, a single token with ``repo:status`` scope is sufficient for basic CI operation.
-
-.. warning::
-   Tokens must have a lifetime of no more than 30 days by LLNL policy.
+See :ref:`github-token-scopes` in the Quick Reference for the full scope
+breakdown by use case.
 
 Do I need separate status per machine?
 =======================================
