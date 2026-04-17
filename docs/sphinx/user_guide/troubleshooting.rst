@@ -280,7 +280,7 @@ Token Not Working
 
 1. **Verify token scope:** Requires ``repo:status`` permission
 2. **Check token validity:** Token may have expired
-3. **Verify variable name:** Should be consistent in UI and accross configuration
+3. **Verify variable name:** Should be consistent in UI and across configuration
 
 To test token:
 

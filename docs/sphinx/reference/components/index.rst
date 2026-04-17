@@ -22,7 +22,7 @@ RADIUSS Shared CI provides 9 reusable components organized into four categories:
   - :doc:`base-pipeline` - Required for all pipelines
 
 **Machine-Specific:**
-  - :doc:`machine-pipelines` - Build/test on LC machines (6 components)
+  - :doc:`machine-pipelines` - Build/test on LC machines (5 components)
 
 **Performance Testing:**
   - :doc:`performance-pipeline` - Benchmarking and GitHub reporting

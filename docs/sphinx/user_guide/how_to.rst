@@ -179,11 +179,11 @@ Similar pattern for legacy includes:
 
 .. _complex-workflows:
 
-=============================
-Implement Complex CI Worflows
-=============================
+==============================
+Implement Complex CI Workflows
+==============================
 
-In the CI setup description, the resulting worflow gathers all the jobs withing
+In the CI setup description, the resulting workflow gathers all the jobs withing
 one stage, with jobs calling only the ``JOB_CMD`` one-line command.
 
 Restricting the job command to a one-liner is required because we append it to
@@ -204,7 +204,7 @@ job template (``jobs-stage-1``).
 
 It is also possible to go further in the customization and override the list of
 stages to add more. We only warn you that a good understanding of the Shared CI
-implementation is required before overridding it.
+implementation is required before overriding it.
 
 .. warning::
    GitLab YAML syntax allows you to override any section previously defined.

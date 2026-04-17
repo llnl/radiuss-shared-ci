@@ -27,7 +27,7 @@ have Spack already on the system, and we don't want to clone it in each job.
 Requirements
 ------------
 
-#. We want to use a single instance of Spack accross all the CI jobs, for
+#. We want to use a single instance of Spack across all the CI jobs, for
    performance reasons.
 
 #. We don't want two independent pipelines to use the same instance of Spack,
@@ -234,7 +234,7 @@ We are planning to share the configuration files (``compilers.yaml`` and
 ``packages.yaml`` for the most part) in
 `another open-source repo <https://github.com/LLNL/radiuss-spack-configs>`_.
 
-This will help ensure consistency in out testing accross LLNL open-source
+This will help ensure consistency in out testing across LLNL open-source
 projects. This is already in use in `RAJA <https://github.com/LLNL/RAJA>`_,
 `Umpire <https://github.com/LLNL/Umpire>`_ and `CHAI
 <https://github.com/LLNL/CHAI>`_. Projects could still add their own

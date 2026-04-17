@@ -225,7 +225,7 @@ stage for any job to respect a specific sequence.
      stage: jobs-stage-2  # Override default (jobs-stage-1)
 
 This will prevent secondary-job from running until primary-job successfully
-complete.
+completes.
 
 What's ASSOCIATED_CHILD_PIPELINE?
 ==================================

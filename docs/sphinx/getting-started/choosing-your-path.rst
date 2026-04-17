@@ -379,7 +379,7 @@ For SLURM/Flux machines, you can use:
 - Simpler (no shared state)
 
 .. note::
-   We recommend shared allocations for regular CI jobs, and inidividual
+   We recommend shared allocations for regular CI jobs, and individual
    allocations for performance jobs to avoid interference.
 
 Choosing Allocation Size
