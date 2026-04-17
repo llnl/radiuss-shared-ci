@@ -69,7 +69,7 @@ Should I use components or legacy approach?
 - Already have working legacy setup
 - Not ready to migrate yet
 
-See :doc:`setup_ci` for comparison.
+See :doc:`setup-with-components` and :doc:`setup-legacy` for details on each approach.
 
 Can I migrate from legacy to components?
 =========================================

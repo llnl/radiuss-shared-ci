@@ -68,7 +68,7 @@ Getting started
 ===============
 
 The steps necessary to adopt the RADIUSS Shared CI methodology are documented
-in the :doc:`RADIUSS Shared CI User Guide <user_guide/setup_ci>`.
+in the :doc:`Setup CI with Components <user_guide/setup-with-components>` guide.
 
 Contributing
 ============
@@ -119,7 +119,8 @@ Cool features provided by RADIUSS Shared CI
 
    user_guide/concepts
    user_guide/quick-reference
-   user_guide/setup_ci
+   user_guide/setup-with-components
+   user_guide/setup-legacy
    user_guide/how_to
    user_guide/troubleshooting
    user_guide/faq

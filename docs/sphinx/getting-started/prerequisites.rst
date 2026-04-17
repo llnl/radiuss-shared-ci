@@ -309,7 +309,7 @@ Need More Context?
 
 - **Understand the architecture**: :doc:`../user_guide/concepts`
 - **Quick reference**: :doc:`../user_guide/quick-reference`
-- **Full setup guide**: :doc:`../user_guide/setup_ci`
+- **Full setup guide**: :doc:`../user_guide/setup-with-components`
 
 .. seealso::
 

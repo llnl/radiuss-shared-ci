@@ -358,7 +358,7 @@ Now that you understand the core concepts, you can:
 
 - **New users**: Proceed to :doc:`../getting-started/five-minute-setup` (once created)
 - **Migrating users**: See :doc:`components_migration`
-- **Learn more**: Explore :doc:`setup_ci` for detailed setup instructions
+- **Learn more**: Explore :doc:`setup-with-components` for detailed setup instructions
 
 .. seealso::
 

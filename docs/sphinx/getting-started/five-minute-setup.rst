@@ -360,7 +360,7 @@ Get Help
 
 - **Quick reference**: :doc:`../user_guide/quick-reference`
 - **Troubleshooting guide**: :doc:`../dev_guide/troubleshooting`
-- **Full setup documentation**: :doc:`../user_guide/setup_ci`
+- **Full setup documentation**: :doc:`../user_guide/setup-with-components`
 - **GitHub issues**: https://github.com/LLNL/radiuss-shared-ci/issues
 
 .. seealso::

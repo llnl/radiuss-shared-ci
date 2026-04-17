@@ -23,7 +23,7 @@ Quick Decision Tree
 
    ┌─ Using GitLab < 17.0?
    │  └→ Use legacy include-based approach
-   │     See: user_guide/setup_ci (legacy section)
+   │     See: user_guide/setup-legacy
    │
    ├─ Using GitLab 17.0+?
    │  ├─ New project?
@@ -419,7 +419,7 @@ After deciding your configuration:
 
 **Learn More**:
 
-- **Detailed setup**: :doc:`../user_guide/setup_ci`
+- **Detailed setup**: :doc:`../user_guide/setup-with-components`
 - **How-to guides**: :doc:`../user_guide/how_to`
 - **Quick reference**: :doc:`../user_guide/quick-reference`
 - **Advanced patterns**: :doc:`../cookbook/index` (once created)

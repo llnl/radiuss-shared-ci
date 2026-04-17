@@ -321,7 +321,7 @@ Quick Links
 - **Getting Started**: :doc:`../getting-started/five-minute-setup` (once created)
 - **Core Concepts**: :doc:`concepts`
 - **Migration Guide**: :doc:`components_migration`
-- **Detailed Setup**: :doc:`setup_ci`
+- **Detailed Setup**: :doc:`setup-with-components`
 - **How-To Guides**: :doc:`how_to`
 - **Troubleshooting**: :doc:`../dev_guide/troubleshooting`
 
