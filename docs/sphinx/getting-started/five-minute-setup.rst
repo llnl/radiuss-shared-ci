@@ -322,44 +322,12 @@ Now that you have a basic pipeline running, you can:
 **Enable Performance Testing**:
   Add the ``performance-pipeline`` component and performance jobs
 
-=======================
-Troubleshooting
-=======================
-
-Pipeline Doesn't Start
-======================
-
-- **Check mirroring**: Verify your project exists on LC GitLab
-- **Check syntax**: Validate YAML with ``yamllint .gitlab-ci.yml``
-- **Check variables**: Ensure ``GITHUB_PROJECT_NAME`` matches your repo
-
-Machine Check Fails
-===================
-
-- **Dane is down**: This is expected - the pipeline will skip gracefully
-- **Lorenz file missing**: Contact LC support
-
-Jobs Fail
-=========
-
-- **Script errors**: Check job logs for script failures
-- **Path issues**: Ensure ``JOB_CMD`` path is correct
-- **Module not found**: Check existence of the loaded modules on the machine
-- **Permission denied**: Check service user permissions
-
-GitHub Status Not Showing
-==========================
-
-- **Token missing**: Verify ``GITHUB_STATUS_TOKEN`` is set in GitLab variables
-- **Token expired**: Regenerate token if needed
-- **Wrong permissions**: Token needs ``repo:status`` scope
-
 ==============
 Get Help
 ==============
 
+- **Troubleshooting**: :doc:`../user_guide/troubleshooting`
 - **Quick reference**: :doc:`../user_guide/quick-reference`
-- **Troubleshooting guide**: :doc:`../dev_guide/troubleshooting`
 - **Full setup documentation**: :doc:`../user_guide/setup-with-components`
 - **GitHub issues**: https://github.com/LLNL/radiuss-shared-ci/issues
 

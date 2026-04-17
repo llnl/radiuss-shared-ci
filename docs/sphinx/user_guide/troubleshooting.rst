@@ -104,6 +104,22 @@ Use consistent version across all components:
 Pipeline Issues
 ====================
 
+Pipeline Doesn't Start
+======================
+
+**Possible Causes:**
+
+1. **Mirror not set up**: Verify your GitHub project is mirrored to LC GitLab
+2. **YAML syntax errors**: Validate with the CI Lint tool at ``https://lc.llnl.gov/gitlab/<org>/<project>/-/ci/lint``
+3. **Wrong project name**: Ensure ``GITHUB_PROJECT_NAME`` matches your GitHub repository name exactly
+
+Machine Check Failures
+======================
+
+**Machine is down**: Expected — the pipeline skips that machine gracefully, no action required.
+
+**Lorenz file missing**: The machine availability check depends on the Lorenz status file. Contact LC support if this persists.
+
 Template Not Found in Child Pipeline
 =====================================
 

@@ -247,32 +247,10 @@ See the ``examples/`` directory in the repository for complete migration example
    For full input, output, and exported template details for each component,
    see :doc:`../reference/components/index`.
 
-Troubleshooting
----------------
+.. seealso::
 
-Component Not Found
-^^^^^^^^^^^^^^^^^^^
-
-**Error:** ``Component 'radiuss/radiuss-shared-ci/dane-pipeline' not found``
-
-**Solution:** Ensure you're using GitLab 17.0+ and the components have been
-published to the CI/CD Catalog on your GitLab instance.
-
-Input Validation Errors
-^^^^^^^^^^^^^^^^^^^^^^^
-
-**Error:** ``Required input 'github_project_name' not provided``
-
-**Solution:** Check that all required inputs are specified in the ``inputs:`` section
-of your component include.
-
-Template Not Found in Child Pipeline
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Error:** ``Job extends template that doesn't exist: .job_on_dane``
-
-**Solution:** Ensure the machine pipeline component is included in the child pipeline's
-``trigger: include:`` section, not in the parent pipeline.
+   Hit an error during migration? See :doc:`troubleshooting` for solutions to
+   common component, input validation, and template errors.
 
 Legacy Compatibility
 --------------------
