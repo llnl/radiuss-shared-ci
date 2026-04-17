@@ -337,7 +337,7 @@ Simplest possible setup (single machine, one job):
 Quick Links
 =============
 
-- **Getting Started**: :doc:`../getting-started/five-minute-setup` (once created)
+- **Getting Started**: :doc:`../getting-started/five-minute-setup`
 - **Core Concepts**: :doc:`concepts`
 - **Migration Guide**: :doc:`components_migration`
 - **Detailed Setup**: :doc:`setup-with-components`

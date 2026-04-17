@@ -156,7 +156,7 @@ To add more jobs with different configurations:
 
 Your build script can read these ``COMPILER`` variables.
 
-.. notes::
+.. note::
    RADIUSS projects that leverage radiuss-shared-ci typically use Spack in the
    build script and pass the spack spec as a variable.
 

@@ -424,7 +424,6 @@ After deciding your configuration:
 - **Detailed setup**: :doc:`../user_guide/setup-with-components`
 - **How-to guides**: :doc:`../user_guide/how_to`
 - **Quick reference**: :doc:`../user_guide/quick-reference`
-- **Advanced patterns**: :doc:`../cookbook/index` (once created)
 
 **Get Help**:
 
