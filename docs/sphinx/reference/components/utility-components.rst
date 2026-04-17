@@ -418,7 +418,7 @@ See Also
 ========
 
 - :doc:`base-pipeline` - Core orchestration component
-- :doc:`../getting-started/choosing-your-path` - Choosing utilities guide
+- :doc:`../getting_started/choosing-your-path` - Choosing utilities guide
 - :doc:`../user_guide/quick-reference` - Quick utility setup reference
 
 **Related Topics**:

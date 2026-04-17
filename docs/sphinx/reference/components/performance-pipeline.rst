@@ -531,7 +531,7 @@ Or adjust the input to match your actual filename.
 See Also
 ========
 
-- :doc:`../getting-started/choosing-your-path` - When to use performance testing
+- :doc:`../getting_started/choosing-your-path` - When to use performance testing
 - :doc:`../user_guide/quick-reference` - Quick performance setup reference
 - :doc:`machine-pipelines` - Machine allocation details
 

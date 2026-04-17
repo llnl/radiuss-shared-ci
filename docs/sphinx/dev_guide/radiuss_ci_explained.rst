@@ -324,7 +324,7 @@ Location: ``docs/sphinx/``
 
 Sphinx documentation organized as:
 
-- ``getting-started/`` - New user guides
+- ``getting_started/`` - New user guides
 - ``user_guide/`` - Setup and usage
 - ``reference/`` - Component API reference
 - ``dev_guide/`` - Developer documentation

@@ -147,9 +147,9 @@ Step 5: Update Documentation
 
 3. **Update machine lists in:**
 
-   - ``docs/sphinx/getting-started/choosing-your-path.rst``
+   - ``docs/sphinx/getting_started/choosing-your-path.rst``
    - ``docs/sphinx/user_guide/quick-reference.rst``
-   - ``docs/sphinx/getting-started/five-minute-setup.rst`` (if appropriate)
+   - ``docs/sphinx/getting_started/five-minute-setup.rst`` (if appropriate)
 
 4. **Add** ``ON_NEWMACHINE`` **to variable tables**
 

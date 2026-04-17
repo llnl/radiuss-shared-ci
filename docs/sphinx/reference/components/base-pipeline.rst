@@ -400,7 +400,7 @@ See Also
 ========
 
 - :doc:`machine-pipelines` - Machine-specific pipeline components
-- :doc:`../getting-started/five-minute-setup` - Quick start guide
+- :doc:`../getting_started/five-minute-setup` - Quick start guide
 - :doc:`../user_guide/quick-reference` - Quick reference card
 - :doc:`../user_guide/concepts` - Architecture concepts
 

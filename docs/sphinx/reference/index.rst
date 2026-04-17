@@ -96,7 +96,7 @@ For New Users
 
 If you're new to RADIUSS Shared CI components:
 
-1. **Start here**: :doc:`../getting-started/index`
+1. **Start here**: :doc:`../getting_started/index`
 2. **Understand concepts**: :doc:`../user_guide/concepts`
 3. **Quick reference**: :doc:`../user_guide/quick-reference`
 4. **Then explore**: Component reference documentation below

@@ -116,5 +116,5 @@ See Also
 ======================
 
 - :doc:`../../user_guide/quick-reference` - Quick lookup for common patterns
-- :doc:`../../getting-started/five-minute-setup` - Get started quickly
+- :doc:`../../getting_started/five-minute-setup` - Get started quickly
 - :doc:`../../user_guide/components_migration` - Migrate from legacy setup

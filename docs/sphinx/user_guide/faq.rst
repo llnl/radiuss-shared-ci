@@ -85,7 +85,7 @@ No. Choose machines that match your hardware requirements:
 - **Tuolumne:** AMD GPU testing (MI300A), production-like environment
 - **Corona:** AMD GPU testing (MI50), older hardware
 
-Most projects test on 1-3 machines. See :doc:`../getting-started/choosing-your-path`.
+Most projects test on 1-3 machines. See :doc:`../getting_started/choosing-your-path`.
 
 Can I add more machines later?
 ===============================
@@ -268,7 +268,7 @@ How do I set up a service user?
 2. Set ``LLNL_SERVICE_USER`` variable in CI configuration
 3. Verify user has access to required machines
 
-See :doc:`../getting-started/prerequisites` for details.
+See :doc:`../getting_started/prerequisites` for details.
 
 ==================
 GitHub Integration
@@ -503,6 +503,6 @@ See Also
 ========
 
 - :doc:`troubleshooting` - Common issues and solutions
-- :doc:`../getting-started/five-minute-setup` - Quick start
+- :doc:`../getting_started/five-minute-setup` - Quick start
 - :doc:`setup-with-components` - Setup guide
 - :doc:`../reference/components/index` - Component reference

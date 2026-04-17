@@ -554,7 +554,7 @@ See Also
 ========
 
 - :doc:`base-pipeline` - Required orchestration component
-- :doc:`../getting-started/choosing-your-path` - Choosing machines guide
+- :doc:`../getting_started/choosing-your-path` - Choosing machines guide
 - :doc:`../user_guide/quick-reference` - Quick allocation examples
 - :doc:`../user_guide/concepts` - Machine abstraction explanation
 

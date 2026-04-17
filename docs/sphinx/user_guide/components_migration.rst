@@ -9,7 +9,7 @@ GitLab CI Components.
 
 .. note::
    **New to RADIUSS Shared CI?** You don't need this guide. See
-   :doc:`../getting-started/five-minute-setup` instead.
+   :doc:`../getting_started/five-minute-setup` instead.
 
 Quick Migration Checklist
 --------------------------

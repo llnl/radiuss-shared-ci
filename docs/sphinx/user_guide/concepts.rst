@@ -302,7 +302,7 @@ Next Steps
 
 Now that you understand the core concepts, you can:
 
-- **New users**: Proceed to :doc:`../getting-started/five-minute-setup`
+- **New users**: Proceed to :doc:`../getting_started/five-minute-setup`
 - **Migrating users**: See :doc:`components_migration`
 - **Learn more**: Explore :doc:`setup-with-components` for detailed setup instructions
 

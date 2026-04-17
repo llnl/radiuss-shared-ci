@@ -108,10 +108,10 @@ Cool features provided by RADIUSS Shared CI
    :maxdepth: 2
    :caption: Getting Started
 
-   getting-started/index
-   getting-started/prerequisites
-   getting-started/five-minute-setup
-   getting-started/choosing-your-path
+   getting_started/index
+   getting_started/prerequisites
+   getting_started/five-minute-setup
+   getting_started/choosing-your-path
 
 .. toctree::
    :maxdepth: 3

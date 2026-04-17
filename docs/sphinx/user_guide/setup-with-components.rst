@@ -16,7 +16,7 @@ This guide walks through setting up RADIUSS Shared CI using GitLab CI
 Components (requires GitLab 17.0+).
 
 .. note::
-   This guide assumes you have completed :doc:`../getting-started/five-minute-setup`
+   This guide assumes you have completed :doc:`../getting_started/five-minute-setup`
    and have a single-machine pipeline running on Dane. It covers extending that
    setup with more machines, custom job templates, variables, and performance testing.
 
@@ -34,7 +34,7 @@ Before starting, ensure you have:
 - Build/test script (single command)
 - GitHub personal access token
 
-See :doc:`../getting-started/prerequisites` for detailed requirements.
+See :doc:`../getting_started/prerequisites` for detailed requirements.
 
 ========
 Overview
@@ -320,7 +320,7 @@ repository:
 See Also
 ========
 
-- :doc:`../getting-started/five-minute-setup` - Quick start
+- :doc:`../getting_started/five-minute-setup` - Quick start
 - :doc:`../reference/components/index` - Component reference
 - :doc:`how_to` - Common tasks
 - :doc:`components_migration` - Migrate from legacy

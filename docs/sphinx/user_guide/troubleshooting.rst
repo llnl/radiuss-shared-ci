@@ -482,7 +482,7 @@ If your issue isn't covered here:
 See Also
 ========
 
-- :doc:`../getting-started/five-minute-setup` - Quick start
+- :doc:`../getting_started/five-minute-setup` - Quick start
 - :doc:`setup-with-components` - Component setup guide
 - :doc:`components_migration` - Migration guide
 - :doc:`../reference/components/index` - Component reference
