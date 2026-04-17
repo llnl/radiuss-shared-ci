@@ -16,8 +16,9 @@ This guide walks through setting up RADIUSS Shared CI using GitLab CI
 Components (requires GitLab 17.0+).
 
 .. note::
-   **New to RADIUSS Shared CI?** Start with :doc:`../getting-started/five-minute-setup`
-   for a quick working setup, then return here for customization details.
+   This guide assumes you have completed :doc:`../getting-started/five-minute-setup`
+   and have a single-machine pipeline running on Dane. It covers extending that
+   setup with more machines, custom job templates, variables, and performance testing.
 
    **Migrating from legacy setup?** See :doc:`components_migration` instead.
 
@@ -58,89 +59,13 @@ directives with typed inputs. No template file copying required.
    └── scripts/
        └── build-and-test.sh    # Your build script
 
-==================
-Step 1: Main Pipeline
-==================
-
-Create `.gitlab-ci.yml` in your project root:
-
-.. code-block:: yaml
-
-   ###########################################################################
-   # RADIUSS Shared CI - Component-Based Setup
-   ###########################################################################
-
-   # Required: Define stages
-   stages:
-     - prerequisites
-     - build-and-test
-
-   # Variables
-   variables:
-     # GitHub integration
-     GITHUB_PROJECT_NAME: "my-project"  # Change this
-     GITHUB_PROJECT_ORG: "LLNL"         # Change if different
-
-     # Build command
-     JOB_CMD:
-       value: "./scripts/build-and-test.sh"
-       expand: false
-
-     # Optional: Service user
-     LLNL_SERVICE_USER: ""
-
-     # Optional: Submodules
-     GIT_SUBMODULE_STRATEGY: recursive
-
-   # Include base pipeline component
-   include:
-     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2026.02.2
-       inputs:
-         github_project_name: $GITHUB_PROJECT_NAME
-         github_project_org: $GITHUB_PROJECT_ORG
-         github_token: $GITHUB_STATUS_TOKEN
-
-**What to change:**
-
-1. ``GITHUB_PROJECT_NAME`` - Your GitHub repository name
-2. ``GITHUB_PROJECT_ORG`` - Your GitHub organization (usually "LLNL")
-3. ``JOB_CMD`` - Path to your build/test script
-4. ``LLNL_SERVICE_USER`` - Service account name (if using one)
-
 ====================
-Step 2: Add Machines
+Add More Machines
 ====================
 
-For each machine you want to test on, add a check job and pipeline trigger.
-
-Dane Example (SLURM, CPU)
-==========================
-
-.. code-block:: yaml
-
-   # In .gitlab-ci.yml (after include section)
-
-   # Machine availability check
-   dane-up-check:
-     extends: [.dane, .machine-check]
-     variables:
-       ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"
-
-   # Machine pipeline trigger
-   dane-build-and-test:
-     needs: [dane-up-check]
-     extends: [.dane, .build-and-test]
-     trigger:
-       include:
-         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
-           inputs:
-             job_cmd: $JOB_CMD
-             shared_alloc: "--reservation=ci --exclusive --nodes=1 --time=30"
-             job_alloc: "--reservation=ci --overlap --nodes=1"
-             github_project_name: $GITHUB_PROJECT_NAME
-             github_project_org: $GITHUB_PROJECT_ORG
-             llnl_service_user: $LLNL_SERVICE_USER
-         - local: '.gitlab/jobs/dane.yml'
+Your Dane setup from the quick-start is already working. To add another
+machine, repeat the same pattern — one check job and one pipeline trigger —
+for each additional machine.
 
 Matrix Example (SLURM, NVIDIA GPU)
 ===================================
@@ -192,13 +117,13 @@ Tioga Example (Flux, AMD GPU)
 
 See :doc:`../reference/components/machine-pipelines` for all machines and allocation options.
 
-=================
-Step 3: Add Jobs
-=================
+======================
+Extend Job Files
+======================
 
-For each machine, create a job file in `.gitlab/jobs/`.
-
-Create `.gitlab/jobs/dane.yml`:
+Once a machine pipeline is included, add jobs by extending its template in
+``.gitlab/jobs/<machine>.yml``. Multiple jobs with different build
+configurations look like this:
 
 .. code-block:: yaml
 
@@ -206,11 +131,6 @@ Create `.gitlab/jobs/dane.yml`:
    # Dane Jobs
    ###########################################################################
 
-   # Simple single job
-   basic-build:
-     extends: .job_on_dane
-
-   # Or multiple jobs with different configurations
    gcc-11-build:
      extends: .job_on_dane
      variables:
@@ -230,34 +150,6 @@ Create `.gitlab/jobs/dane.yml`:
        VERSION: "14"
 
 Your build script can read variables set by the job instance (here ``$COMPILER``, ``$VERSION``).
-
-=========================
-Step 4: GitHub Token
-=========================
-
-In GitLab CI/CD settings, add your GitHub token:
-
-1. Go to: ``https://lc.llnl.gov/gitlab/<org>/<project>/-/settings/ci_cd``
-2. Expand "Variables"
-3. Add variable:
-
-   - Key: ``GITHUB_STATUS_TOKEN``
-   - Value: (your GitHub token with ``repo:status`` scope)
-   - Type: Variable
-   - Protected: ☑
-   - Masked: ☑
-
-====================
-Step 5: Commit & Push
-====================
-
-.. code-block:: bash
-
-   git add .gitlab-ci.yml .gitlab/jobs/
-   git commit -m "Add RADIUSS Shared CI configuration"
-   git push
-
-After mirroring completes, check your pipeline in GitLab.
 
 ==============
 Customization
@@ -412,91 +304,17 @@ Each job gets own allocation:
    examples because we strongly recommend using those dedicated resources for
    CI.
 
-=======================
-Complete Example
-=======================
+========
+Examples
+========
 
-Full `.gitlab-ci.yml` with multiple machines:
+For complete, copy-ready pipeline files covering multiple machines, custom
+jobs, and performance testing, see the ``examples/`` directory in the
+repository:
 
-.. code-block:: yaml
-
-   stages:
-     - prerequisites
-     - build-and-test
-
-   variables:
-     GITHUB_PROJECT_NAME: "my-project"
-     GITHUB_PROJECT_ORG: "LLNL"
-     JOB_CMD:
-       value: "./scripts/build-and-test.sh"
-       expand: false
-
-   include:
-     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2026.02.2
-       inputs:
-         github_project_name: $GITHUB_PROJECT_NAME
-         github_project_org: $GITHUB_PROJECT_ORG
-         github_token: $GITHUB_STATUS_TOKEN
-
-   # CPU testing on Dane
-   dane-up-check:
-     extends: [.dane, .machine-check]
-     variables:
-       ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"
-
-   dane-build-and-test:
-     needs: [dane-up-check]
-     extends: [.dane, .build-and-test]
-     trigger:
-       include:
-         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
-           inputs:
-             job_cmd: $JOB_CMD
-             shared_alloc: "--reservation=ci --nodes=1 --exclusive --time=30"
-             job_alloc: "--reservation=ci --nodes=1"
-             github_project_name: $GITHUB_PROJECT_NAME
-             github_project_org: $GITHUB_PROJECT_ORG
-         - local: '.gitlab/jobs/dane.yml'
-
-   # NVIDIA GPU testing on Matrix
-   matrix-up-check:
-     extends: [.matrix, .machine-check]
-     variables:
-       ASSOCIATED_CHILD_PIPELINE: "matrix-build-and-test"
-
-   matrix-build-and-test:
-     needs: [matrix-up-check]
-     extends: [.matrix, .build-and-test]
-     trigger:
-       include:
-         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/matrix-pipeline@v2026.02.2
-           inputs:
-             job_cmd: $JOB_CMD
-             shared_alloc: "--partition=pci --nodes=1 --exclusive --time=30"
-             job_alloc: "--partition=pci --nodes=1"
-             github_project_name: $GITHUB_PROJECT_NAME
-             github_project_org: $GITHUB_PROJECT_ORG
-         - local: '.gitlab/jobs/matrix.yml'
-
-   # AMD GPU testing on Tioga
-   tioga-up-check:
-     extends: [.tioga, .machine-check]
-     variables:
-       ASSOCIATED_CHILD_PIPELINE: "tioga-build-and-test"
-
-   tioga-build-and-test:
-     needs: [tioga-up-check]
-     extends: [.tioga, .build-and-test]
-     trigger:
-       include:
-         - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/tioga-pipeline@v2026.02.2
-           inputs:
-             job_cmd: $JOB_CMD
-             shared_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=30m"
-             job_alloc: "--queue=pci --nodes=1 --begin-time=+5s"
-             github_project_name: $GITHUB_PROJECT_NAME
-             github_project_org: $GITHUB_PROJECT_ORG
-         - local: '.gitlab/jobs/tioga.yml'
+- ``examples/example-gitlab-ci.yml`` — multi-machine parent pipeline
+- ``examples/example-custom-jobs.yml`` — custom job templates
+- ``examples/example-jobs-dane.yml`` — machine-specific jobs
 
 ========
 See Also
