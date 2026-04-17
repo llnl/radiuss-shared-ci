@@ -60,19 +60,19 @@ Available Machines
      - Best For
    * - **Dane**
      - SLURM
-     - AMD EPYC + NVIDIA A100 GPUs
+     - Intel Sapphire Rapids
      - CUDA development, modern GPU testing
    * - **Matrix**
      - SLURM
-     - AMD EPYC + AMD MI300A APUs
+     - Intel Sapphire Rapids + NVIDIA H100 GPUs
      - ROCm development, APU testing
    * - **Corona**
      - Flux
-     - AMD EPYC + AMD MI250X GPUs
+     - AMD Rome + AMD MI50 GPUs
      - ROCm development, AMD GPU testing
    * - **Tioga**
      - Flux
-     - AMD EPYC + AMD MI250X GPUs
+     - AMD Trento + AMD MI250X GPUs
      - ROCm development, production-like environment
    * - **Tuolumne**
      - Flux
