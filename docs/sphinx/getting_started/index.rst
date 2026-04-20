@@ -6,16 +6,16 @@
 .. ## SPDX-License-Identifier: (MIT)
 .. ##
 
-***************
-Getting Started
-***************
+***********
+Navigation
+***********
 
 Welcome to RADIUSS Shared CI! This section will help you get your CI pipeline
 up and running quickly.
 
-======================
+====================
 Choose Your Journey
-======================
+====================
 
 New to RADIUSS Shared CI?
 ==========================

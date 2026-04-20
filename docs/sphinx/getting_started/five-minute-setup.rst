@@ -117,7 +117,7 @@ Create ``.gitlab-ci.yml`` in your project root:
 
 1. Line 13: Change ``"myproject"`` to your GitHub project name
 2. Line 14: Change ``"LLNL"`` if your org is different
-3. Line 18: Change to match your build script path
+3. Line 18: Change with your actual build and test command
 
 =============================
 Step 3: Dane Jobs File
@@ -137,7 +137,7 @@ Create ``.gitlab/jobs/dane.yml``:
 
 **That's it!** This creates one job that runs your ``JOB_CMD`` on Dane.
 
-To add more jobs with different configurations:
+Add more jobs with different configurations using variables, for example:
 
 .. code-block:: yaml
 
@@ -154,7 +154,8 @@ To add more jobs with different configurations:
        COMPILER: "clang"
        COMPILER_VERSION: "14.0.0"
 
-Your build script can read these ``COMPILER`` variables.
+``COMPILER`` and ``COMPILER_VERSION`` variables are now accessible to your
+script's environment.
 
 .. note::
    RADIUSS projects that leverage radiuss-shared-ci typically use Spack in the
@@ -174,7 +175,7 @@ If you don't have a build/test script yet, create ``scripts/build-and-test.sh``:
    echo "Building and testing project..."
 
    # Example: Load environment
-   module load gcc/13.3.1
+   module load ${COMPILER}/${COMPILER_VERSION}
    module load cmake/3.25
 
    # Example: Configure
@@ -198,8 +199,8 @@ Make it executable:
    chmod +x scripts/build-and-test.sh
 
 .. note::
-   Adapt this script to your project's actual build system (CMake, Make,
-   Spack, etc.).
+   The content of this script is entirely project dependent. Adapt it to your
+   project's actual build system (CMake, Make, Spack, etc.).
 
 ====================================
 Step 5: Configure GitHub Token
@@ -243,7 +244,7 @@ Add and commit your new files:
    - Add basic build/test job
    - Include build script"
 
-   git push origin main  # or your branch name
+   git push origin your_ci_feature_branch
 
 =========================
 Step 7: Verify in GitLab
@@ -293,9 +294,19 @@ Let's break down what you created:
 
 **Reporting**:
 
-- Parent pipeline reports to GitHub: "dane-up-check" and overall status
-- Child pipeline reports to GitHub: "dane-build-and-test"
-- You see both statuses on GitHub PR/commit
+- Overall status of the parent pipeline (depending on child pipeline success)
+  is reported to GitHub automatically via native integration.
+- Machine-specific status is reported both by machine check jobs (RADIUSS
+  Shared CI feature) and by the corresponding child pipelines via native
+  integration.
+- You see both statuses on GitHub PR/commit.
+
+.. note::
+   The machine check and child pipeline status reports are independent but both
+   use the same reporting context. This allows native child pipelines reports
+   to override a failure in the machine check when a machine returns as
+   available after an initial failure without multiplying the reports (machine
+   checks don't report successes to reduce the number of statuses).
 
 ==============
 Next Steps
