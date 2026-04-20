@@ -34,7 +34,7 @@ projects.
 Overview
 ========
 
-*In a hurry? Quickstart instructions can be found in* :ref:`instructions`.
+*In a hurry? Quickstart instructions can be found in* :doc:`our five-minute setup guide <getting_started/five-minute-setup>`.
 
 Who is this for?
 ================
@@ -67,16 +67,26 @@ More specifically:
 Getting started
 ===============
 
-The steps necessary to adopt the RADIUSS Shared CI methodology are documented
-in the :doc:`Setup CI with Components <user_guide/setup-with-components>` guide.
+See the :doc:`getting started navigation page <getting_started/index>` to help you get your CI pipeline up and running quickly.
+
+User documentation
+==================
+
+Better understanding of the concepts and features of the RADIUSS Shared CI infrastructure can be found in the :doc:`user guide <user_guide/concepts>`.
+
+Information is also provided in more details in the :doc:`quick reference <user_guide/reference>`, the :doc:`how-to guide <user_guide/how_to>` and the `FAQ <user_guide/FAQ>`.
+
+In-depth technical documentation
+================================
+
+In the  :doc:`developer guide <dev_guide/radiuss_ci_explained>`,
+we discuss the layout of the RADIUSS Shared CI infrastructure and how the
+different pieces work together. Technical choices are also explained there.
 
 Contributing
 ============
 
-In the  :doc:`RADIUSS Shared CI Developer Guide <dev_guide/radiuss_ci_explained>`,
-we discuss the layout of the RADIUSS Shared CI infrastructure and how the
-different pieces work together. Technical choices are also explained there.
-
+In addition to the technical documentation, we have a :doc: `developer how-to guide <dev_guide/how_to>`, :doc:`contributing guide <dev_guide/contributing>` and :doc:`troubleshooting guide <dev_guide/troubleshooting>` to help you get started with contributing to the project.
 
 =========================
 Background and Motivation
