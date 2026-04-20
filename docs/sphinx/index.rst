@@ -74,7 +74,7 @@ User documentation
 
 Better understanding of the concepts and features of the RADIUSS Shared CI infrastructure can be found in the :doc:`user guide <user_guide/concepts>`.
 
-Information is also provided in more details in the :doc:`quick reference <user_guide/reference>`, the :doc:`how-to guide <user_guide/how_to>` and the `FAQ <user_guide/FAQ>`.
+Information is also provided in more details in the :doc:`quick reference <user_guide/quick-reference>`, the :doc:`how-to guide <user_guide/how_to>` and the :doc:`FAQ <user_guide/faq>`.
 
 In-depth technical documentation
 ================================
@@ -86,7 +86,7 @@ different pieces work together. Technical choices are also explained there.
 Contributing
 ============
 
-In addition to the technical documentation, we have a :doc: `developer how-to guide <dev_guide/how_to>`, :doc:`contributing guide <dev_guide/contributing>` and :doc:`troubleshooting guide <dev_guide/troubleshooting>` to help you get started with contributing to the project.
+In addition to the technical documentation, we have a :doc:`developer how-to guide <dev_guide/how_to>`, :doc:`contributing guide <dev_guide/contributing>` and :doc:`troubleshooting guide <dev_guide/troubleshooting>` to help you get started with contributing to the project.
 
 =========================
 Background and Motivation

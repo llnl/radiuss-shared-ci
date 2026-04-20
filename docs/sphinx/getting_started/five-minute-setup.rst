@@ -244,7 +244,7 @@ Add and commit your new files:
    - Add basic build/test job
    - Include build script"
 
-   git push origin your_ci_feature_branch
+   git push origin <your-branch>
 
 =========================
 Step 7: Verify in GitLab
