@@ -6,9 +6,9 @@
 .. ## SPDX-License-Identifier: (MIT)
 .. ##
 
-**********************
+********************
 Component Reference
-**********************
+********************
 
 Complete reference documentation for all RADIUSS Shared CI components.
 
@@ -30,9 +30,9 @@ RADIUSS Shared CI provides 9 reusable components organized into four categories:
 **Utilities:**
   - :doc:`utility-components` - Draft PR filter, branch skip (2 components)
 
-========================
+==========================
 How to Use This Reference
-========================
+==========================
 
 Each component page includes:
 
@@ -43,9 +43,9 @@ Each component page includes:
 - **Examples** - Working code snippets
 - **Common Issues** - Troubleshooting tips
 
-===================
+================
 Component Pages
-===================
+================
 
 .. toctree::
    :maxdepth: 2
@@ -55,9 +55,9 @@ Component Pages
    performance-pipeline
    utility-components
 
-========================
+======================
 Quick Input Reference
-========================
+======================
 
 Common Inputs Across Components
 ================================
@@ -89,9 +89,9 @@ Many components share these inputs:
 
 See individual component pages for complete input specifications.
 
-=======================
+======================
 Version Compatibility
-=======================
+======================
 
 All components in a pipeline should use the **same version**:
 
@@ -111,9 +111,9 @@ All components in a pipeline should use the **same version**:
 **Reason:** Components share template names and variable conventions. Mixing
 versions can cause template conflicts or missing definitions.
 
-======================
+=========
 See Also
-======================
+=========
 
 - :doc:`../../user_guide/quick-reference` - Quick lookup for common patterns
 - :doc:`../../getting_started/five-minute-setup` - Get started quickly

@@ -93,5 +93,6 @@ Cool features provided by RADIUSS Shared CI
    :caption: Reference
 
    reference/index
+   reference/glossary
 
 .. _RADIUSS Spack Configs: https://radiuss-spack-configs.readthedocs.io/en/latest/index.html
