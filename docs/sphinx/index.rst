@@ -8,7 +8,10 @@
 RADIUSS Shared CI
 #################
 
-The RADIUSS Shared CI project provides a *templated CI infrastructure for
+*In a hurry? Quickstart instructions can be found in* :doc:`our five-minute
+setup guide <getting_started/five-minute-setup>`.
+
+The RADIUSS Shared CI project provides a *templated CI infrastructure for LC
 GitLab* that we intend to be sufficiently flexible and general to be adopted
 and shared by any LLNL open-source projects hosted on GitHub.
 
@@ -29,65 +32,6 @@ projects.
    and the open source community of a set of libraries and tools used for HPC
    scientific application development.
 
-
-========
-Overview
-========
-
-*In a hurry? Quickstart instructions can be found in* :doc:`our five-minute setup guide <getting_started/five-minute-setup>`.
-
-Who is this for?
-================
-
-Your project is hosted on GitHub and you want to run tests on Livermore
-Computing (LC) systems through the LC GitLab instance. You don't have the
-bandwidth to train your team on the intricacies of GitLab CI/CD or you don't
-want to reinvent the wheel by writing your own CI/CD configuration from
-scratch.
-
-RADIUSS Shared CI gets you started shortly with a templated CI infrastructure
-that is flexible enough to be adapted to your needs, but general enough to be
-shared with other projects.
-
-System requirements/prerequisites
-=================================
-
-You'll need an account on LC GitLab instance and a project hosted in the LLNL
-organization on GitHub that can be built and tested with a single command line.
-
-More specifically:
-
-- At least one team member must have an account on the LC GitLab instance.
-
-- You will need a script to drive the builds and tests of your project. We
-  enforce this recommendation for technical reasons, but it also guarantees
-  that the CI behavior can be reproduced locally and keeps the yaml files
-  readable.
-
-Getting started
-===============
-
-See the :doc:`getting started navigation page <getting_started/index>` to help you get your CI pipeline up and running quickly.
-
-User documentation
-==================
-
-Better understanding of the concepts and features of the RADIUSS Shared CI infrastructure can be found in the :doc:`user guide <user_guide/concepts>`.
-
-Information is also provided in more details in the :doc:`quick reference <user_guide/quick-reference>`, the :doc:`how-to guide <user_guide/how_to>` and the :doc:`FAQ <user_guide/faq>`.
-
-In-depth technical documentation
-================================
-
-In the  :doc:`developer guide <dev_guide/radiuss_ci_explained>`,
-we discuss the layout of the RADIUSS Shared CI infrastructure and how the
-different pieces work together. Technical choices are also explained there.
-
-Contributing
-============
-
-In addition to the technical documentation, we have a :doc:`developer how-to guide <dev_guide/how_to>`, :doc:`contributing guide <dev_guide/contributing>` and :doc:`troubleshooting guide <dev_guide/troubleshooting>` to help you get started with contributing to the project.
-
 =========================
 Background and Motivation
 =========================
@@ -106,7 +50,7 @@ Cool features provided by RADIUSS Shared CI
 
 * A shared configuration, for reduced maintenance.
 * Ability to define your jobs command and add as many jobs as desired.
-* Leverage GitLab child pipelines to keep the pipeline readable.
+* Leverage GitLab child pipelines and components to keep the pipeline readable.
 * Each child pipeline reports independently to GitHub: one status per machine.
 * Projects can extend their pipeline at will with additional stages.
 * Print an exact reproducer in the logs.
