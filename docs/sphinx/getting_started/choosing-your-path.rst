@@ -94,7 +94,7 @@ Common starting points:
 
 - **CUDA projects**: Start with Matrix
 - **ROCm projects**: Start with Tioga or Tuolumne
-- **CPU-only**: Any machine works, Dane is a good default
+- **CPU-only**: Prefer Dane which has no GPU
 
 **Q: How many machines should I enable?**
 
@@ -369,14 +369,14 @@ For SLURM/Flux machines, you can use:
 
 - One allocation for all jobs on that machine
 - Jobs run sequentially or in parallel within allocation
-- Faster (no wait between jobs)
-- More efficient (better utilization)
+- Easier to configure (adapt top-level allocation parameters as needed)
+- Harder to understand resource usage (scheduling less transparent)
 
 **Individual Allocations** (``shared_alloc: "OFF"``):
 
 - Each job gets its own allocation
-- Slower (wait time between jobs)
-- Simpler (no shared state)
+- Simpler to understand
+- More work to maintain: optimal use requires the user to define allocation parameters for each job
 
 .. note::
    We recommend shared allocations for regular CI jobs, and individual
@@ -389,7 +389,7 @@ Consider:
 
 **Time**:
 
-- Start conservative (30 minutes)
+- Start conservative
 - Monitor actual job duration
 - Add buffer for variability
 - Max out at queue limits
@@ -397,14 +397,14 @@ Consider:
 **Resources**:
 
 - Match your typical build (1 node usually sufficient)
-- Don't over-allocate (wastes resources)
+- Only over-allocate shared allocation to pack more jobs in parallel (otherwise wastes resources)
 - Can override per-job if needed
-
-Example configurations:
 
 .. note::
    For flexibility, we advise not to set a time limit for jobs running under a
    shared allocation: the top level allocaton suffices.
+
+Example configurations:
 
 ==============
 Next Steps

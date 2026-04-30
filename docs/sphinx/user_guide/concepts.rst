@@ -234,13 +234,19 @@ allocation** for all jobs on that machine:
    ├── Job 3: intel-build (5 minutes)
    └── Job 4: gcc-debug (5 minutes)
 
-Benefits:
-
-- **Faster**: No allocation wait time between jobs
-- **Efficient**: Better resource utilization
-- **Simpler**: One allocation to manage
+This approach has trade-offs:
+- **Simpler configuration**: One allocation to manage
+- **Harder to understand**: Scheduler behavior is less transparent
 
 Set ``shared_alloc: "OFF"`` to disable for machines where this doesn't make sense.
+
+.. warning::
+
+   On machines using Flux, manually triggering a job in a pipeline will result
+   in the job being scheduled using the default queue instead of the CI queue.
+   This can lead to long wait times for the job to start. The workaround is to
+   first run the shared allocation job, and only then trigger the desired job.
+   We are working on a better solution for this issue.
 
 ================
 Key Terminology
@@ -261,7 +267,7 @@ Architecture Diagram
    │  - Source code                                               │
    │  - Pull requests                                             │
    │  - Commit statuses ←────────────────────┐                    │
-   └────────────┬────────────────────────────┼────────────────────┘
+   └────────────┬────────────────────────────│────────────────────┘
                 │ (mirrored)                 │ (status reports)
                 ↓                            │
    ┌───────────────────────────────────────┐ │
@@ -273,7 +279,7 @@ Architecture Diagram
    │  └─ Machine pipeline triggers         │ │
    │                                       │ │
    │  ┌─────────────────────────────────┐  │ │
-   │  │ dane-up-check ──→ Available?    │──┼─┤
+   │  │ dane-up-check ──→ Available?    │────┤
    │  └─────────────────────────────────┘  │ │
    │           ↓ (if available)            │ │
    │  ┌─────────────────────────────────┐  │ │
@@ -283,9 +289,9 @@ Architecture Diagram
    │  │  └─ Local: jobs/dane.yml        │  │ │
    │  │                                 │  │ │
    │  │     Jobs run on Dane:           │  │ │
-   │  │     ├─ gcc-build ──────────────────┼─┤
-   │  │     ├─ clang-build ────────────────┼─┤
-   │  │     └─ intel-build ────────────────┼─┤
+   │  │     ├─ gcc-build ────────────────────┤
+   │  │     ├─ clang-build ──────────────────┤
+   │  │     └─ intel-build ──────────────────┤
    │  └─────────────────────────────────┘  │ │
    │                                       │ │
    │  (Similar for matrix, tioga, etc.)    │ │
