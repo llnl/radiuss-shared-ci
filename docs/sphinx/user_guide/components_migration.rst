@@ -113,11 +113,11 @@ Step 2: Update Main Pipeline File
        inputs:
          github_project_name: "my-project"
          github_project_org: "LLNL"
-         github_token: $GITHUB_TOKEN
+         github_token: $GITHUB_STATUS_TOKEN
 
      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2026.02.2
        inputs:
-         github_token: $GITHUB_TOKEN
+         github_token: $GITHUB_STATUS_TOKEN
          github_project_name: "my-project"
          github_project_org: "LLNL"
 

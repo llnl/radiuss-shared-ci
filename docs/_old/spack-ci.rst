@@ -234,7 +234,7 @@ We are planning to share the configuration files (``compilers.yaml`` and
 ``packages.yaml`` for the most part) in
 `another open-source repo <https://github.com/LLNL/radiuss-spack-configs>`_.
 
-This will help ensure consistency in out testing across LLNL open-source
+This will help ensure consistency in our testing across LLNL open-source
 projects. This is already in use in `RAJA <https://github.com/LLNL/RAJA>`_,
 `Umpire <https://github.com/LLNL/Umpire>`_ and `CHAI
 <https://github.com/LLNL/CHAI>`_. Projects could still add their own

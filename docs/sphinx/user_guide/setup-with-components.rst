@@ -158,7 +158,7 @@ Customization
 Optional Variables File
 =======================
 
-Create `.gitlab/custom-variables.yml` for cleaner organization:
+Create ``.gitlab/custom-variables.yml`` for cleaner organization:
 
 .. code-block:: yaml
 
@@ -170,7 +170,7 @@ Create `.gitlab/custom-variables.yml` for cleaner organization:
      MATRIX_SHARED_ALLOC: "--partition=pci --exclusive --nodes=1 --time=30"
      MATRIX_JOB_ALLOC: "--partition=pci --overlap --nodes=1"
 
-Then include it in `.gitlab-ci.yml`:
+Then include it in ``.gitlab-ci.yml``:
 
 .. code-block:: yaml
 

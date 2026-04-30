@@ -98,9 +98,9 @@ Set these in ``.gitlab-ci.yml`` or ``.gitlab/custom-variables.yml``:
    * - ``GITHUB_PROJECT_ORG``
      - Your GitHub organization
      - ``"LLNL"``
-   * - ``GITHUB_TOKEN``
+   * - ``GITHUB_STATUS_TOKEN``
      - GitHub token (set in GitLab CI/CD settings)
-     - ``$GITHUB_TOKEN``
+     - ``$GITHUB_STATUS_TOKEN``
    * - ``LLNL_SERVICE_USER``
      - Service account username (optional)
      - ``"myproject"``
@@ -305,7 +305,7 @@ Simplest possible setup (single machine, one job):
        inputs:
          github_project_name: $GITHUB_PROJECT_NAME
          github_project_org: $GITHUB_PROJECT_ORG
-         github_token: $GITHUB_TOKEN
+         github_token: $GITHUB_STATUS_TOKEN
 
    dane-up-check:
      extends: [.dane, .machine-check]
@@ -342,7 +342,7 @@ Quick Links
 - **Migration Guide**: :doc:`components_migration`
 - **Detailed Setup**: :doc:`setup-with-components`
 - **How-To Guides**: :doc:`how_to`
-- **Troubleshooting**: :doc:`../dev_guide/troubleshooting`
+- **Troubleshooting**: :doc:`../user_guide/troubleshooting`
 
 .. seealso::
 

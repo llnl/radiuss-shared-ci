@@ -39,7 +39,7 @@ Need Help?
 
 - **Quick lookup**: :doc:`../user_guide/quick-reference`
 - **Understand concepts**: :doc:`../user_guide/concepts`
-- **Troubleshooting**: :doc:`../dev_guide/troubleshooting`
+- **Troubleshooting**: :doc:`../user_guide/troubleshooting`
 
 ============
 What's Next?
