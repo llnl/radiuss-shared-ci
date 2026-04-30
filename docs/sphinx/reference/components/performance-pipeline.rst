@@ -344,7 +344,7 @@ Performance testing on multiple machines:
              # AMD GPU testing
              tioga_perf_alloc: "--nodes=1 --exclusive --time-limit=15m -g 1"
              perf_processing_cmd: "python scripts/process-results.py"
-             github_token: $GITHUB_TOKEN
+             github_token: $GITHUB_STATUS_TOKEN
              github_project_name: $GITHUB_PROJECT_NAME
              github_project_org: $GITHUB_PROJECT_ORG
          - local: '.gitlab/jobs/performances.yml'

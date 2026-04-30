@@ -9,7 +9,7 @@ architectures, and configurations.
 
 **Current Version:** v2026.02.2 | **Requires:** GitLab 17.0+
 
-📚 **[Full Documentation](https://radiuss-shared-ci.readthedocs.io/)** | 🚀 **[5-Minute Setup](https://radiuss-shared-ci.readthedocs.io/en/latest/getting-started/five-minute-setup.html)** | 📖 **[Migration Guide](https://radiuss-shared-ci.readthedocs.io/en/latest/user_guide/components_migration.html)**
+📚 **[Full Documentation](https://radiuss-shared-ci.readthedocs.io/)** | 🚀 **[5-Minute Setup](https://radiuss-shared-ci.readthedocs.io/en/latest/getting_started/five-minute-setup.html)** | 📖 **[Migration Guide](https://radiuss-shared-ci.readthedocs.io/en/latest/user_guide/components_migration.html)**
 
 ## Table of Contents
 
@@ -82,7 +82,7 @@ gcc-build:
     COMPILER: "gcc"
 ```
 
-See [5-Minute Setup Guide](https://radiuss-shared-ci.readthedocs.io/en/latest/getting-started/five-minute-setup.html) for complete walkthrough.
+See [5-Minute Setup Guide](https://radiuss-shared-ci.readthedocs.io/en/latest/getting_started/five-minute-setup.html) for complete walkthrough.
 
 ## Components
 

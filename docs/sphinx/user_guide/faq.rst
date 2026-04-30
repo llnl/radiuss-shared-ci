@@ -174,7 +174,7 @@ How do variables work between parent and child pipelines?
 ==========================================================
 
 Variables defined in parent pipeline are available in child pipelines when
-defined in the trigger job or passed as inputs to the component trigged. 
+defined in the trigger job or passed as inputs to the component triggered.
 
 .. code-block:: yaml
 
@@ -244,7 +244,7 @@ associated downstream pipeline:
        ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"  # Links to child
 
 Without this, the machine check status would never be overridden by build/test
-results on GitHub side, causing an intial failure status to never update once
+results on GitHub side, causing an initial failure status to never update once
 the machine is back up.
 
 =============

@@ -61,11 +61,11 @@ Available Machines
    * - **Dane**
      - SLURM
      - Intel Sapphire Rapids
-     - CUDA development, modern GPU testing
+     - CPU-only development, build and test workloads
    * - **Matrix**
      - SLURM
      - Intel Sapphire Rapids + NVIDIA H100 GPUs
-     - ROCm development, APU testing
+     - CUDA development, H100 GPU testing
    * - **Corona**
      - Flux
      - AMD Rome + AMD MI50 GPUs
@@ -197,7 +197,7 @@ utility-draft-pr-filter
    include:
      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2026.02.2
        inputs:
-         github_token: $GITHUB_TOKEN
+         github_token: $GITHUB_STATUS_TOKEN
          github_project_name: $GITHUB_PROJECT_NAME
          github_project_org: $GITHUB_PROJECT_ORG
          always_run_pattern: "^(main|develop)$"  # Optional: branches that always run
@@ -231,7 +231,7 @@ utility-branch-skip
    include:
      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-branch-skip@v2026.02.2
        inputs:
-         github_token: $GITHUB_TOKEN
+         github_token: $GITHUB_STATUS_TOKEN
          github_project_name: $GITHUB_PROJECT_NAME
          github_project_org: $GITHUB_PROJECT_ORG
 
