@@ -51,18 +51,6 @@ RADIUSS Shared CI provides 5 machine pipeline components:
      - AMD Rome + AMD MI50
      - Older AMD GPU hardware
 
-Choosing Machines
-=================
-
-**For most projects, we recommend:**
-
-- **CPU testing**: Start with **dane-pipeline**
-- **NVIDIA GPU testing**: Use **matrix-pipeline**
-- **AMD GPU testing**: Use **tioga-pipeline**
-- **Production AMD**: Add **tuolumne-pipeline**
-
-**Corona** is available but less commonly used for new projects (older hardware).
-
 =================
 Common Structure
 =================
@@ -73,7 +61,7 @@ differences.
 Common Inputs
 =============
 
-All machine pipelines require:
+All machine pipelines define the following:
 
 .. list-table::
    :header-rows: 1
@@ -115,7 +103,7 @@ Scheduler-Specific Inputs
      - Per-job allocation args (``srun``)
    * - ``alloc_name``
      - No
-     - Shared allocation name (default: "ci_<machine>")
+     - Shared allocation name (default: "ALLOC_${CI_PIPELINE_ID}")
 
 **Flux machines (Corona, Tioga, Tuolumne)**:
 
@@ -134,7 +122,7 @@ Scheduler-Specific Inputs
      - Per-job allocation args (``flux run``)
    * - ``alloc_name``
      - No
-     - Shared allocation name (default: "ci_<machine>")
+     - Shared allocation name (default: "ALLOC_${CI_PIPELINE_ID}")
 
 Common Exported Templates
 ==========================

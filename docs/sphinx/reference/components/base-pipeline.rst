@@ -134,17 +134,16 @@ The component exports several job templates you can extend:
 
 **What it does**:
 
-1. Provides trigger configuration template
-2. Uses ``strategy: depend`` to wait for child completion
-3. Forwards pipeline variables to child
-4. Sets appropriate stage (``build-and-test``)
+1. Uses ``strategy: depend`` to wait for child completion
+2. Forwards pipeline variables to child
+3. Sets appropriate stage (``build-and-test``)
 
 .custom_job
 ===========
 
 **Purpose**: Base customization template for all build/test jobs.
 
-**Usage**: Override in your ``.gitlab/custom-jobs.yml`` to add project-specific setup.
+**Usage**: Override, for example in ``.gitlab/custom-jobs.yml``, and include in each child pipeline trigger definition to add project-specific setup.
 
 .. code-block:: yaml
 
@@ -161,14 +160,14 @@ The component exports several job templates you can extend:
 
 - Provides an empty template that all job templates extend
 - Allows to define project specific job configuration in one place
-- Applies to all build/test jobs across all machines
+- Applies to all build/test jobs across all machines (if included accordingly)
 
 .custom_perf
 ============
 
 **Purpose**: Base customization template for performance jobs.
 
-**Usage**: Override in your ``.gitlab/custom-jobs.yml`` for performance-specific setup.
+**Usage**: Override, for example in your ``.gitlab/custom-jobs.yml``, and include in performance pipeline trigger for performance-specific setup.
 
 .. code-block:: yaml
 
@@ -178,10 +177,20 @@ The component exports several job templates you can extend:
        - echo "Performance environment setup"
        - export PERF_FLAGS="..."
 
+   # In .gitlab-ci.yml
+   performance-measurements:
+     extends: [.performance-measurements]
+     trigger:
+       include:
+         - component: .../performance-pipeline@v2026.02.2
+           inputs: { ... }
+         - local: '.gitlab/custom-jobs.yml'
+         - local: '.gitlab/jobs/performances.yml'
+
 **What it does**:
 
 - Similar to ``.custom_job`` but for performance pipeline
-- Extends to all performance jobs
+- Extends to all performance jobs (if included accordingly)
 - Separate from ``.custom_job`` to allow different configurations
 
 Machine-Specific Rules

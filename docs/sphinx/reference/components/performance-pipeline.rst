@@ -251,27 +251,16 @@ When configured, the performance pipeline creates this job flow:
 Data Formats
 =============
 
-The component works with user-provided data formats:
-
-Raw Results
-===========
+The component allows user-defined formats for raw results and requires a specific JSON format for processed results to enable GitHub reporting.
 
 Your ``job_cmd`` produces results in whatever format your ``perf_processing_cmd``
-expects. Common formats:
+expects (CSV, JSON, Custom format, etc.).
 
-- CSV
-- JSON
-- Custom text format
-
-Processed Results (JSON)
-=========================
-
-Your ``perf_processing_cmd`` should output JSON in GitHub benchmark format:
+Your ``perf_processing_cmd`` should output JSON in `GitHub benchmark format <https://github.com/benchmark-action/github-action-benchmark>`_:
 
 .. code-block:: json
 
-   {
-     "benchmarks": [
+   [
        {
          "name": "MatrixMultiply",
          "unit": "GFLOPS",
@@ -282,10 +271,7 @@ Your ``perf_processing_cmd`` should output JSON in GitHub benchmark format:
          "unit": "ms",
          "value": 12.3
        }
-     ],
-     "commit_hash": "<sha>",
-     "machine": "<machine-name>"
-   }
+   ]
 
 .. note::
    As of v2026.02.2, the component makes ``commit_hash`` available to your
@@ -453,10 +439,8 @@ Example ``process-results.py``:
                'value': float(value.strip())
            })
 
-   # Output JSON
-   output = {'benchmarks': benchmarks}
    with open('processed.json', 'w') as f:
-       json.dump(output, f, indent=2)
+       json.dump(benchmarks, f, indent=2)
 
    print(f"Processed {len(benchmarks)} benchmarks")
 
