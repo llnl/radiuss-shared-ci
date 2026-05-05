@@ -21,10 +21,55 @@ the RADIUSS Shared CI framework set up for your project.
 Updating RADIUSS Shared CI
 ==========================
 
-Updating RADIUSS shared CI is straightforward. The Shared CI version to use is
-defined by a the reference (set by the ``ref:`` section) in the remote
-includes. We recommend using a variable to set this reference only once, and
-then update radiuss-shared-ci easily.
+Component-Based (Recommended)
+==============================
+
+Update the version tag in all component references.
+
+**Before:**
+
+.. code-block:: yaml
+
+   - component: .../base-pipeline@v2025.12.0
+
+**After:**
+
+.. code-block:: yaml
+
+   - component: .../base-pipeline@v2026.02.2  # ← Updated version
+
+**Update all components:**
+
+.. code-block:: yaml
+
+   include:
+     - component: .../base-pipeline@v2026.02.2              # ← Update
+     - component: .../utility-draft-pr-filter@v2026.02.2    # ← Update
+
+   dane-build-and-test:
+     trigger:
+       include:
+         - component: .../dane-pipeline@v2026.02.2          # ← Update
+
+.. important::
+   Use the same version for all components to avoid conflicts.
+
+Legacy (Include-Based)
+======================
+
+Update the ``ref:`` value. Using a variable lets you update once:
+
+**Recommended approach:**
+
+.. code-block:: yaml
+
+   variables:
+     SHARED_CI_REF: v2026.02.2  # ← Update this one value
+
+   include:
+     - project: 'radiuss/radiuss-shared-ci'
+       ref: ${SHARED_CI_REF}     # References the variable
+       file: 'pipelines/dane.yml'
 
 .. _leverage-spack:
 
@@ -66,19 +111,16 @@ infrastructure would be done following two steps:
 Import shared jobs
 ==================
 
-In the :ref:`add-jobs` section of the CI setup chapter, we explained how to
-add jobs using a local file. Our projects using the full CI infrastructure,
-including RADIUSS Spack Configs, also share a set of jobs that correspond to
-toolchains they all care about.
+RADIUSS projects using RADIUSS Spack Configs share job definitions for common
+toolchains. Since GitLab doesn't permit including files from submodules, we
+generate merged job files.
 
-Those jobs are defined in RADIUSS Spack Configs, which is set as a submodule in
-our projects. While GitLab does not permit to include file from submodules, we
-work around this by generating the jobs YAML file, merging the local
-project-specific one with the shared one from the RADIUSS Spack Configs
-submodule.
+This works with both component-based and legacy setups.
 
-This translate into the addition of a new job in a stage preceeding the child
-pipeline calls:
+Setup
+=====
+
+Add a job in the prerequisites stage to merge shared and local jobs:
 
 .. code-block:: yaml
 
@@ -98,47 +140,50 @@ pipeline calls:
          - corona-jobs.yml
          - tioga-jobs.yml
 
-In this same file, you will need to specify that each sub-pipeline trigger job
-now "need" the ``generate-job-lists``. This is done in the ``needs`` section:
+Usage with Components
+=====================
+
+Add dependency and use generated artifact:
 
 .. code-block:: yaml
 
    dane-build-and-test:
-     variables:
-       CI_MACHINE: "dane"
-     needs: [dane-up-check, generate-job-lists]
-     extends: [.build-and-test]
+     needs: [dane-up-check, generate-job-lists]  # Add dependency
+     extends: [.dane, .build-and-test]
+     trigger:
+       include:
+         - component: .../dane-pipeline@v2026.02.2
+         - artifact: 'dane-jobs.yml'  # Use generated file
+           job: 'generate-job-lists'
 
-Then, the child pipeline template ``.build-and-test`` in ``.gitlab-ci.yml``
-becomes:
+Usage with Legacy
+=================
+
+Similar pattern for legacy includes:
 
 .. code-block:: yaml
 
-   .build-and-test:
-     stage: build-and-test
+   dane-build-and-test:
+     needs: [dane-up-check, generate-job-lists]
      trigger:
        include:
          - local: '.gitlab/custom-jobs-and-variables.yml'
          - project: 'radiuss/radiuss-shared-ci'
            ref: '${SHARED_CI_REF}'
-           file: 'pipelines/${CI_MACHINE}.yml'
-         - artifact: '${CI_MACHINE}-jobs.yml'
+           file: 'pipelines/dane.yml'
+         - artifact: 'dane-jobs.yml'
            job: 'generate-job-lists'
-       strategy: depend
-       forward:
-         pipeline_variables: true
 
-Local jobs are merged with shared jobs, still allowing projects to define their
-own jobs. Also, local jobs should be defined after the shared ones in the final
-file to preserve the capability to override the latter if needed.
+.. note::
+   Local jobs should be defined after shared ones to allow overriding.
 
 .. _complex-workflows:
 
-=============================
-Implement Complex CI Worflows
-=============================
+==============================
+Implement Complex CI Workflows
+==============================
 
-In the CI setup description, the resulting worflow gathers all the jobs withing
+In the CI setup description, the resulting workflow gathers all the jobs withing
 one stage, with jobs calling only the ``JOB_CMD`` one-line command.
 
 Restricting the job command to a one-liner is required because we append it to
@@ -159,7 +204,7 @@ job template (``jobs-stage-1``).
 
 It is also possible to go further in the customization and override the list of
 stages to add more. We only warn you that a good understanding of the Shared CI
-implementation is required before overridding it.
+implementation is required before overriding it.
 
 .. warning::
    GitLab YAML syntax allows you to override any section previously defined.
@@ -173,3 +218,12 @@ implementation is required before overridding it.
 .. _radiuss-spack-configs: https://github.com/LLNL/radiuss-spack-configs
 .. _Uberenv: https://github.com/LLNL/uberenv
 .. _Spack: https://github.com/spack/spack
+
+========
+See Also
+========
+
+- :doc:`setup-with-components` - Initial setup guide
+- :doc:`quick-reference` - Quick reference for variables and components
+- :doc:`troubleshooting` - Common issues
+- :doc:`../reference/components/index` - Component reference
