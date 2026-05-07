@@ -14,6 +14,7 @@ stages:
 
 create-release:
   stage: release
+  tags: [oslic, shell]
   image: registry.gitlab.com/gitlab-org/cli:latest
   script: echo "Creating release $CI_COMMIT_TAG"
   rules:
