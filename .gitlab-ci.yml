@@ -16,8 +16,10 @@ create-release:
   stage: release
   tags: [oslic, batch]
   image:
-    name: registry.gitlab.com/gitlab-org/cli:latest
+    name: registry.gitlab.com/gitlab-org/release-cli:v0.24.0
     entrypoint: [/bin/sh]
+  variables:
+    HOME: /tmp
   script: echo "Creating release $CI_COMMIT_TAG"
   rules:
     - if: $CI_COMMIT_TAG
