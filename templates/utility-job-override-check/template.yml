@@ -1,0 +1,300 @@
+---
+###############################################################################
+# Copyright (c) 2025, Lawrence Livermore National Security, LLC and RADIUSS
+# project contributors. See the COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (MIT)
+###############################################################################
+
+# GitLab CI Component: Job Override Check
+#
+# This component detects changes in radiuss-spack-configs shared jobs and
+# warns developers when local job overrides may need updating.
+#
+# The check compares shared jobs between the branch base (where it diverged
+# from develop) and current HEAD, identifying renamed, modified, or removed
+# jobs that have local overrides. It also warns if develop has moved ahead.
+#
+# Usage:
+#   include:
+#     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-job-override-check@v2025.12.0
+#       inputs:
+#         submodule_path: "scripts/radiuss-spack-configs"
+#         shared_jobs_path: "gitlab/radiuss-jobs"
+#         local_jobs_path: ".gitlab/jobs"
+#         machine_files: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml lassen.yml"
+
+spec:
+  inputs:
+    submodule_path:
+      type: string
+      description: "Path to radiuss-spack-configs submodule relative to project root"
+      default: "scripts/radiuss-spack-configs"
+
+    shared_jobs_path:
+      type: string
+      description: "Path to shared job definitions within submodule"
+      default: "gitlab/radiuss-jobs"
+
+    local_jobs_path:
+      type: string
+      description: "Path to local job overrides in project"
+      default: ".gitlab/jobs"
+
+    machine_files:
+      type: string
+      description: "Space-separated list of machine YAML files to check"
+      default: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml lassen.yml"
+
+---
+
+variables:
+  SUBMODULE_PATH: "$[[ inputs.submodule_path ]]"
+  SHARED_JOBS_PATH: "$[[ inputs.shared_jobs_path ]]"
+  LOCAL_JOBS_PATH: "$[[ inputs.local_jobs_path ]]"
+  MACHINE_FILES: "$[[ inputs.machine_files ]]"
+
+# Job override check
+check-job-overrides:
+  stage: .pre
+  tags: [shell, oslic]
+  variables:
+    GIT_STRATEGY: fetch
+    GIT_DEPTH: 0  # Full clone needed for merge-base calculation
+  script:
+    - |
+      set -e
+
+      echo ""
+      echo "=========================================="
+      echo "Job Override Check"
+      echo "=========================================="
+      echo "Submodule path: $SUBMODULE_PATH"
+      echo "Shared jobs path: $SHARED_JOBS_PATH"
+      echo "Local jobs path: $LOCAL_JOBS_PATH"
+      echo "Machine files: $MACHINE_FILES"
+      echo ""
+
+      # Check if submodule exists
+      if [ ! -d "$SUBMODULE_PATH" ]; then
+        echo "Submodule $SUBMODULE_PATH does not exist, skipping check"
+        exit 0
+      fi
+
+      # Determine base branch (try develop first, then main)
+      BASE_BRANCH=""
+      if git rev-parse origin/develop >/dev/null 2>&1; then
+        BASE_BRANCH="origin/develop"
+      elif git rev-parse origin/main >/dev/null 2>&1; then
+        BASE_BRANCH="origin/main"
+      else
+        echo "Warning: Neither origin/develop nor origin/main found, skipping check"
+        exit 0
+      fi
+
+      echo "Using base branch: $BASE_BRANCH"
+      echo ""
+
+      # Find merge base
+      if ! merge_base=$(git merge-base HEAD $BASE_BRANCH 2>&1); then
+        echo "Warning: Cannot find merge base with $BASE_BRANCH, skipping check"
+        exit 0
+      fi
+
+      echo "Merge base: $merge_base"
+
+      # Get submodule commits at three points
+      base_submodule=$(git ls-tree $merge_base $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
+      current_submodule=$(git ls-tree HEAD $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
+      develop_submodule=$(git ls-tree $BASE_BRANCH $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
+
+      # Validate commit hashes
+      if [ -z "$base_submodule" ] || [ -z "$current_submodule" ] || [ -z "$develop_submodule" ]; then
+        echo "Warning: Could not extract submodule commits, skipping check"
+        exit 0
+      fi
+
+      if [[ ! "$base_submodule" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$current_submodule" =~ ^[0-9a-f]{40}$ ]]; then
+        echo "Error: Invalid submodule commit hash detected"
+        exit 1
+      fi
+
+      echo "Base submodule:    $base_submodule (where branch diverged)"
+      echo "Current submodule: $current_submodule (branch HEAD)"
+      echo "Develop submodule: $develop_submodule ($BASE_BRANCH)"
+      echo ""
+
+      # Determine what changed
+      branch_changed=false
+      develop_changed=false
+
+      if [ "$base_submodule" != "$current_submodule" ]; then
+        branch_changed=true
+      fi
+
+      if [ "$base_submodule" != "$develop_submodule" ]; then
+        develop_changed=true
+      fi
+
+      # Skip check if branch hasn't changed submodule
+      if [ "$branch_changed" = "false" ]; then
+        echo "Branch has not updated submodule, skipping override check"
+        if [ "$develop_changed" = "true" ]; then
+          echo ""
+          echo "INFO: The $BASE_BRANCH branch has submodule changes."
+          echo "Consider merging $BASE_BRANCH to get the latest shared job definitions:"
+          echo "  git fetch origin"
+          echo "  git merge $BASE_BRANCH"
+        fi
+        exit 0
+      fi
+
+      echo "Branch has updated submodule: $base_submodule -> $current_submodule"
+      echo ""
+
+      # Warn if develop has moved ahead
+      if [ "$develop_changed" = "true" ]; then
+        echo "=========================================="
+        echo "WARNING: $BASE_BRANCH has submodule changes!"
+        echo "=========================================="
+        echo ""
+        echo "The $BASE_BRANCH branch also has submodule updates:"
+        echo "  Base:    $base_submodule"
+        echo "  $BASE_BRANCH: $develop_submodule"
+        echo ""
+        echo "RECOMMENDATION: Merge $BASE_BRANCH into your branch before proceeding:"
+        echo "  git fetch origin"
+        echo "  git merge $BASE_BRANCH"
+        echo ""
+        echo "This ensures you have the latest shared job definitions."
+        echo ""
+        echo "To see what changed in $BASE_BRANCH:"
+        echo "  cd $SUBMODULE_PATH"
+        echo "  git diff $base_submodule..$develop_submodule -- $SHARED_JOBS_PATH/"
+        echo ""
+        echo "=========================================="
+        echo ""
+      fi
+
+      # Check each machine file for override conflicts
+      cd $SUBMODULE_PATH
+
+      found_issues=false
+
+      for machine_file in $MACHINE_FILES; do
+        machine_name="${machine_file%.yml}"
+
+        # Check if local overrides exist for this machine
+        if [ ! -f "$CI_PROJECT_DIR/$LOCAL_JOBS_PATH/$machine_file" ]; then
+          continue
+        fi
+
+        # Extract job names from shared jobs at base commit
+        if ! base_shared_jobs=$(git show $base_submodule:$SHARED_JOBS_PATH/$machine_file 2>/dev/null | grep "^[a-zA-Z0-9_-]*:" | sed 's/:.*//' | grep -v "^\."); then
+          # File might not exist at base commit
+          base_shared_jobs=""
+        fi
+
+        # Extract job names from shared jobs at current commit
+        if ! current_shared_jobs=$(git show $current_submodule:$SHARED_JOBS_PATH/$machine_file 2>/dev/null | grep "^[a-zA-Z0-9_-]*:" | sed 's/:.*//' | grep -v "^\."); then
+          # File might not exist at current commit
+          current_shared_jobs=""
+        fi
+
+        # Extract job names from local overrides
+        if ! local_jobs=$(grep "^[a-zA-Z0-9_-]*:" "$CI_PROJECT_DIR/$LOCAL_JOBS_PATH/$machine_file" 2>/dev/null | sed 's/:.*//' | grep -v "^\."); then
+          local_jobs=""
+        fi
+
+        # Skip if no local jobs
+        if [ -z "$local_jobs" ]; then
+          continue
+        fi
+
+        # Find renamed/removed jobs (in base shared AND local overrides, but NOT in current shared)
+        renamed_jobs=$(comm -12 <(echo "$base_shared_jobs" | sort) <(echo "$local_jobs" | sort) | comm -23 - <(echo "$current_shared_jobs" | sort))
+
+        # Find potentially modified jobs (in both base and current shared AND local overrides)
+        common_jobs=$(comm -12 <(echo "$base_shared_jobs" | sort) <(echo "$current_shared_jobs" | sort) | comm -12 - <(echo "$local_jobs" | sort))
+
+        modified_jobs=""
+        modified_details=""
+
+        for job in $common_jobs; do
+          # Extract SPEC for this job from base and current commits
+          # awk: Start at job line, skip it, print indented lines until next non-indented line
+          old_spec=$(git show $base_submodule:$SHARED_JOBS_PATH/$machine_file 2>/dev/null | awk "/^${job}:/{found=1; next} found{if (/^[^ ]/) exit; print}" | grep "SPEC:" | sed 's/^[[:space:]]*//' || true)
+          new_spec=$(git show $current_submodule:$SHARED_JOBS_PATH/$machine_file 2>/dev/null | awk "/^${job}:/{found=1; next} found{if (/^[^ ]/) exit; print}" | grep "SPEC:" | sed 's/^[[:space:]]*//' || true)
+
+          if [ "$old_spec" != "$new_spec" ] && [ -n "$old_spec" ] && [ -n "$new_spec" ]; then
+            modified_jobs="$modified_jobs $job"
+            modified_details="$modified_details\n  - $job\n    Old: $old_spec\n    New: $new_spec\n"
+          fi
+        done
+
+        # Report if any issues found for this machine
+        if [ -n "$renamed_jobs" ] || [ -n "$modified_jobs" ]; then
+          if [ "$found_issues" = "false" ]; then
+            echo "=========================================="
+            echo "WARNING: Shared Job Changes Detected"
+            echo "=========================================="
+            echo ""
+            echo "Your branch has updated radiuss-spack-configs submodule."
+            echo "The following shared jobs have changed and may affect your local overrides:"
+            echo ""
+            found_issues=true
+          fi
+
+          echo "Machine: $machine_name"
+          echo "----------------------------------------"
+
+          if [ -n "$renamed_jobs" ]; then
+            echo "RENAMED/REMOVED shared jobs with local overrides:"
+            for job in $renamed_jobs; do
+              echo "  - $job"
+            done
+            echo ""
+          fi
+
+          if [ -n "$modified_jobs" ]; then
+            echo "MODIFIED shared jobs with local overrides:"
+            echo -e "$modified_details"
+          fi
+
+          echo "Local overrides location: $LOCAL_JOBS_PATH/$machine_file"
+          echo ""
+        fi
+      done
+
+      cd - >/dev/null
+
+      # Final recommendations if issues were found
+      if [ "$found_issues" = "true" ]; then
+        echo "ACTION REQUIRED:"
+        echo "  1. Review the changes in $SUBMODULE_PATH"
+        echo "  2. Update your local job overrides in $LOCAL_JOBS_PATH/ if needed"
+        echo "  3. Test affected configurations"
+        echo ""
+        echo "To see detailed changes in your branch:"
+        echo "  cd $SUBMODULE_PATH"
+        echo "  git diff $base_submodule..$current_submodule -- $SHARED_JOBS_PATH/"
+        echo ""
+        echo "This is a WARNING only - the pipeline will continue."
+        echo "=========================================="
+        echo ""
+      else
+        echo "No override conflicts detected."
+        echo "All local job overrides are compatible with updated shared jobs."
+        echo ""
+      fi
+  rules:
+    # Only run when submodule reference has changed in this branch
+    - changes:
+        - $[[ inputs.submodule_path ]]
+      when: on_success
+    # Skip for web-triggered pipelines
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: never
+    # Default: don't run
+    - when: never
+  allow_failure: true
