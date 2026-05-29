@@ -29,91 +29,86 @@ stages:
   extends: [.perf_job, .custom_perf]
   stage: perf-runs
   tags:
-    - shell
+    - batch
     - dane
   rules:
     - if: '$ON_DANE == "OFF"'
       when: never
     - when: on_success
+  variables:
+    SCHEDULER_PARAMETERS: ${DANE_PERF_ALLOC}
   script:
     - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
     - mkdir -p ${PERF_ARTIFACT_DIR}
-    - srun ${DANE_PERF_ALLOC} ${JOB_CMD}
+    - ${JOB_CMD}
 
 .perf_on_matrix:
   extends: [.perf_job, .custom_perf]
   stage: perf-runs
   tags:
-    - shell
+    - batch
     - matrix
   rules:
     - if: '$ON_MATRIX == "OFF"'
       when: never
     - when: on_success
+  variables:
+    SCHEDULER_PARAMETERS: ${MATRIX_PERF_ALLOC}
   script:
     - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
     - mkdir -p ${PERF_ARTIFACT_DIR}
-    - srun ${MATRIX_PERF_ALLOC} ${JOB_CMD}
+    - ${JOB_CMD}
 
 .perf_on_corona:
   extends: [.perf_job, .custom_perf]
   stage: perf-runs
   tags:
-    - shell
+    - batch
     - corona
   rules:
     - if: '$ON_CORONA == "OFF"'
       when: never
     - when: on_success
+  variables:
+    SCHEDULER_PARAMETERS: ${CORONA_PERF_ALLOC}
   script:
     - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
     - mkdir -p ${PERF_ARTIFACT_DIR}
-    - srun ${CORONA_PERF_ALLOC} ${JOB_CMD}
+    - ${JOB_CMD}
 
 .perf_on_tioga:
   extends: [.perf_job, .custom_perf]
   stage: perf-runs
   tags:
-    - shell
+    - batch
     - tioga
   rules:
     - if: '$ON_TIOGA == "OFF"'
       when: never
     - when: on_success
+  variables:
+    SCHEDULER_PARAMETERS: ${TIOGA_PERF_ALLOC}
   script:
     - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
     - mkdir -p ${PERF_ARTIFACT_DIR}
-    - flux run ${TIOGA_PERF_ALLOC} ${JOB_CMD}
+    - ${JOB_CMD}
 
 .perf_on_tuolumne:
   extends: [.perf_job, .custom_perf]
   stage: perf-runs
   tags:
-    - shell
+    - batch
     - tuolumne
   rules:
     - if: '$ON_TUOLUMNE == "OFF"'
       when: never
     - when: on_success
+  variables:
+    SCHEDULER_PARAMETERS: ${TUOLUMNE_PERF_ALLOC}
   script:
     - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
     - mkdir -p ${PERF_ARTIFACT_DIR}
-    - flux run ${TUOLUMNE_PERF_ALLOC} ${JOB_CMD}
-
-.perf_on_lassen:
-  extends: [.perf_job, .custom_perf]
-  stage: perf-runs
-  tags:
-    - shell
-    - lassen
-  rules:
-    - if: '$ON_LASSEN == "OFF"'
-      when: never
-    - when: on_success
-  script:
-    - export PERF_ARTIFACT_DIR=${PERF_ARTIFACT_DIR}/${CI_JOB_NAME}
-    - mkdir -p ${PERF_ARTIFACT_DIR}
-    - lalloc ${LASSEN_PERF_ALLOC} ${JOB_CMD}
+    - ${JOB_CMD}
 
 # Minimal templates for performance processing and reporting jobs
 # Those should be used by projects implementing such jobs.
@@ -192,7 +187,7 @@ stages:
                --header "Authorization: token $GITHUB_WORKFLOW_TOKEN" \
                --header "Accept: application/vnd.github.v3+json" \
                --header "Content-Type: application/json" \
-               --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\" } }" \
+               --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\", \"commit_sha\": \"${CI_COMMIT_SHA}\" } }" \
                --output "$RESPONSE_BODY" \
                --write-out "%{http_code}" \
                --silent \

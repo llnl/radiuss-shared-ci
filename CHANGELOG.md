@@ -6,6 +6,50 @@ The format is based on [Keep a
 Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2026.5.2]
+
+## Changed
+
+Fix release process.
+
+## [2026.5.1]
+
+## Changed
+
+Clean release
+
+## [2026.5.0]
+
+## Changed
+
+- Remove lassen machine from configuration and documentation.
+- Refactor documentation.
+
+## [v2026.02.2]
+
+## Changed
+
+- Add commit hash to the data exported by performance pipeline for better traceability of performance results.
+
+## [v2026.02.1]
+
+### Fixed
+
+- Added RSCI_ environment variable prefix in for internal variables that come from component inputs to prevent collisions with GitLab globals.
+Note that component input names are unchanged.
+
+## [v2026.02.0]
+
+### Changed
+
+- Machine check jobs now use the same GitHub status context as their associated child pipeline. This allows the child pipeline's status to override the machine check status when a machine returns to service, preventing multiple success statuses from appearing in GitHub for the same workflow.
+  - BREAKING: Machine check jobs now require the `ASSOCIATED_CHILD_PIPELINE` variable to be set, specifying the name of the associated child pipeline (e.g., "dane-build-and-test").
+  - Status messages shortened for better readability.
+
+### Fixed
+
+- Switch performance pipeline to batch executor for automatic job cancellation.
+
 ## [v2025.12.1 - 2026-01-12 ]
 
 Patch release:

@@ -41,9 +41,9 @@ include:
     file: 'id_tokens.yml'
 
 variables:
-  GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
-  GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
-  GITHUB_TOKEN: "$[[ inputs.github_token ]]"
+  RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
+  RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSCI_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
 
 ##############################################################################
 # IMPORTANT: Stage Definition
@@ -75,6 +75,14 @@ variables:
       # Check if required variables are set for machine checking
       if [ -z "$CI_MACHINE" ]; then
         echo -e "\e[31mError: CI_MACHINE variable not set\e[0m"
+        exit 1
+      fi
+      # ASSOCIATED_CHILD_PIPELINE is used for GitHub status context so that a
+      # successful check can be associated with the correct child pipeline in
+      # GitHub. While not strictly required for the machine check itself, it's
+      # important for accurate reporting.
+      if [ -z "$ASSOCIATED_CHILD_PIPELINE" ]; then
+        echo -e "\e[31mError: ASSOCIATED_CHILD_PIPELINE variable not set\e[0m"
         exit 1
       fi
 
@@ -110,13 +118,13 @@ variables:
         echo -e "\e[31mMachine ${CI_MACHINE} is down (${NODES_UP} nodes up)\e[0m"
 
         # Report machine unavailability to GitHub
-        if [ -n "$[[ inputs.github_token ]]" ] && [ -n "$[[ inputs.github_project_org ]]" ] && [ -n "$[[ inputs.github_project_name ]]" ]; then
+        if [ -n "${RSCI_GITHUB_TOKEN}" ] && [ -n "${RSCI_GITHUB_PROJECT_ORG}" ] && [ -n "${RSCI_GITHUB_PROJECT_NAME}" ]; then
           STATUS_RESPONSE=$(mktemp)
           STATUS_HTTP_CODE=$(curl --retry 3 --retry-delay 5 --max-time 30 \
-              --url "https://api.github.com/repos/$[[ inputs.github_project_org ]]/$[[ inputs.github_project_name ]]/statuses/${CI_COMMIT_SHA}" \
+              --url "https://api.github.com/repos/${RSCI_GITHUB_PROJECT_ORG}/${RSCI_GITHUB_PROJECT_NAME}/statuses/${CI_COMMIT_SHA}" \
               --header 'Content-Type: application/json' \
-              --header "authorization: Bearer $[[ inputs.github_token ]]" \
-              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"GitLab: ${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/${CI_MACHINE}\" }" \
+              --header "authorization: Bearer ${RSCI_GITHUB_TOKEN}" \
+              --data "{ \"state\": \"failure\", \"target_url\": \"${CI_PIPELINE_URL}\", \"description\": \"${CI_MACHINE} down (0 nodes)\", \"context\": \"ci/gitlab/lc.llnl.gov/${ASSOCIATED_CHILD_PIPELINE}\" }" \
               --output "$STATUS_RESPONSE" \
               --write-out "%{http_code}" \
               --silent \

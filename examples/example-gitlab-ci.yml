@@ -37,7 +37,7 @@ variables:
   # GitHub integration (required for status reporting)
   GITHUB_PROJECT_NAME: "my-project"
   GITHUB_PROJECT_ORG: "LLNL"
-  # GITHUB_TOKEN should be set as a CI/CD variable in GitLab settings
+  # GITHUB_STATUS_TOKEN should be set as a CI/CD variable in GitLab settings
 
   # Build configuration
   GIT_SUBMODULE_STRATEGY: recursive
@@ -53,16 +53,16 @@ variables:
 
 include:
   # Base pipeline templates and utilities
-  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2025.12.0
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/base-pipeline@v2026.02.2
     inputs:
       github_project_name: $GITHUB_PROJECT_NAME
       github_project_org: $GITHUB_PROJECT_ORG
-      github_token: $GITHUB_TOKEN
+      github_token: $GITHUB_STATUS_TOKEN
 
   # Optional: Draft PR filter
-  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2025.12.0
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-draft-pr-filter@v2026.02.2
     inputs:
-      github_token: $GITHUB_TOKEN
+      github_token: $GITHUB_STATUS_TOKEN
       github_project_name: $GITHUB_PROJECT_NAME
       github_project_org: $GITHUB_PROJECT_ORG
 
@@ -76,13 +76,15 @@ include:
 # Dane (SLURM-based)
 dane-up-check:
   extends: [.dane, .machine-check]
+  variables:
+    ASSOCIATED_CHILD_PIPELINE: "dane-build-and-test"
 
 dane-build-and-test:
   needs: [dane-up-check]
   extends: [.dane, .build-and-test]
   trigger:
     include:
-      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2025.12.0
+      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/dane-pipeline@v2026.02.2
         inputs:
           job_cmd: $JOB_CMD
           shared_alloc: "--nodes=1 --exclusive --reservation=ci --time=30"
@@ -95,13 +97,15 @@ dane-build-and-test:
 # Corona (flux-based)
 corona-up-check:
   extends: [.corona, .machine-check]
+  variables:
+    ASSOCIATED_CHILD_PIPELINE: "corona-build-and-test"
 
 corona-build-and-test:
   needs: [corona-up-check]
   extends: [.corona, .build-and-test]
   trigger:
     include:
-      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/corona-pipeline@v2025.12.0
+      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/corona-pipeline@v2026.02.2
         inputs:
           job_cmd: $JOB_CMD
           shared_alloc: "--nodes=1 --exclusive --time-limit=30m -o per-resource.count=2"
@@ -127,18 +131,17 @@ performance-measurements:
     - when: manual
   trigger:
     include:
-      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/performance-pipeline@v2025.12.0
+      - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/performance-pipeline@v2026.02.2
         inputs:
           job_cmd: "./scripts/run-benchmarks.sh"
           dane_perf_alloc: "--nodes=1 --exclusive --reservation=ci --time=15"
-          matrix_perf_alloc: "--nodes=1 --exclusive --partition=pdebug --time=15"
-          corona_perf_alloc: "--nodes=1 --exclusive --time-limit=15m"
-          tioga_perf_alloc: "--nodes=1 --exclusive --time-limit=15m"
-          tuolumne_perf_alloc: "--nodes=1 --exclusive --time-limit=15m"
-          # No perf alloc information for lassen: the perf jobs will not run on lassen.
-          github_token: $GITHUB_TOKEN
+          matrix_perf_alloc: "--nodes=1 --exclusive --partition=pci --time=15"
+          tioga_perf_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=15m"
+          tuolumne_perf_alloc: "--queue=pci --nodes=1 --exclusive --time-limit=15m"
+          # No perf alloc information for corona: the perf jobs will not run on corona.
+          github_token: $GITHUB_STATUS_TOKEN
           github_project_name: $GITHUB_PROJECT_NAME
           github_project_org: $GITHUB_PROJECT_ORG
-      # OPTIONAL - local: '.gitlab/custom-jobs.yml'
-      - local: '.gitlab/custom-jobs.yml'
+      # OPTIONAL: Uncomment if you have custom job templates
+      # - local: '.gitlab/custom-jobs.yml'
       - local: '.gitlab/jobs/performances.yml'
