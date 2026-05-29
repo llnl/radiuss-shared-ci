@@ -44,7 +44,12 @@ spec:
     machine_files:
       type: string
       description: "Space-separated list of machine YAML files to check"
-      default: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml lassen.yml"
+      default: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml"
+
+    base_branch:
+      type: string
+      description: "Base branch used to look for divergence"
+      default: "develop"
 
 ---
 
@@ -53,6 +58,7 @@ variables:
   SHARED_JOBS_PATH: "$[[ inputs.shared_jobs_path ]]"
   LOCAL_JOBS_PATH: "$[[ inputs.local_jobs_path ]]"
   MACHINE_FILES: "$[[ inputs.machine_files ]]"
+  BASE_BRANCH: "origin/$[[ inputs.base_branch ]]"
 
 # Job override check
 check-job-overrides:
@@ -65,40 +71,32 @@ check-job-overrides:
     - |
       set -e
 
-      echo ""
-      echo "=========================================="
-      echo "Job Override Check"
-      echo "=========================================="
-      echo "Submodule path: $SUBMODULE_PATH"
-      echo "Shared jobs path: $SHARED_JOBS_PATH"
-      echo "Local jobs path: $LOCAL_JOBS_PATH"
-      echo "Machine files: $MACHINE_FILES"
+      echo -e ""
+      echo -e "=========================================="
+      echo -e "Job Override Check"
+      echo -e "=========================================="
+      echo -e "Submodule path: $SUBMODULE_PATH"
+      echo -e "Shared jobs path: $SHARED_JOBS_PATH"
+      echo -e "Local jobs path: $LOCAL_JOBS_PATH"
+      echo -e "Machine files: $MACHINE_FILES"
+      echo -e "Base branch: $BASE_BRANCH"
       echo ""
 
       # Check if submodule exists
       if [ ! -d "$SUBMODULE_PATH" ]; then
-        echo "Submodule $SUBMODULE_PATH does not exist, skipping check"
-        exit 0
+        echo -e "Error: Submodule $SUBMODULE_PATH does not exist, skipping check"
+        exit 1
       fi
 
-      # Determine base branch (try develop first, then main)
-      BASE_BRANCH=""
-      if git rev-parse origin/develop >/dev/null 2>&1; then
-        BASE_BRANCH="origin/develop"
-      elif git rev-parse origin/main >/dev/null 2>&1; then
-        BASE_BRANCH="origin/main"
-      else
-        echo "Warning: Neither origin/develop nor origin/main found, skipping check"
-        exit 0
+      if ! git rev-parse origin/$BASE_BRANCH >/dev/null 2>&1; then
+        echo -e "Error: origin/$BASE_BRANCH not found"
+        exit 1
       fi
-
-      echo "Using base branch: $BASE_BRANCH"
-      echo ""
 
       # Find merge base
       if ! merge_base=$(git merge-base HEAD $BASE_BRANCH 2>&1); then
-        echo "Warning: Cannot find merge base with $BASE_BRANCH, skipping check"
-        exit 0
+        echo -e "Error: Cannot find merge base with $BASE_BRANCH, skipping check"
+        exit 1
       fi
 
       echo "Merge base: $merge_base"
