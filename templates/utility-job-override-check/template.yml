@@ -122,29 +122,16 @@ check-job-overrides:
       echo "Develop submodule: $develop_submodule ($REF_BRANCH)"
       echo ""
 
-      # Determine what changed
-      branch_changed=false
+      # Determine what changed.
+      # The branch is guaranteed to have bumped the submodule: the job's rules
+      # gate on changes to $SUBMODULE_PATH with compare_to: $REF_BRANCH, and
+      # GitLab evaluates that against the merge base (merge_base..HEAD), which
+      # is the same base..current comparison used here. So base_submodule !=
+      # current_submodule always holds, and there is no need to check it.
       develop_changed=false
-
-      if [ "$base_submodule" != "$current_submodule" ]; then
-        branch_changed=true
-      fi
 
       if [ "$base_submodule" != "$develop_submodule" ]; then
         develop_changed=true
-      fi
-
-      # Skip check if branch hasn't changed submodule
-      if [ "$branch_changed" = "false" ]; then
-        echo "Branch has not updated submodule, skipping override check"
-        if [ "$develop_changed" = "true" ]; then
-          echo ""
-          echo "INFO: The $REF_BRANCH branch has submodule changes."
-          echo "Consider merging $REF_BRANCH to get the latest shared job definitions:"
-          echo "  git fetch origin"
-          echo "  git merge $REF_BRANCH"
-        fi
-        exit 0
       fi
 
       echo "Branch has updated submodule: $base_submodule -> $current_submodule"
