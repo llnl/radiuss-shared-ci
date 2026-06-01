@@ -46,7 +46,7 @@ spec:
       description: "Space-separated list of machine YAML files to check"
       default: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml"
 
-    base_branch:
+    ref_branch:
       type: string
       description: "Base branch used to look for divergence"
       default: "develop"
@@ -58,7 +58,7 @@ variables:
   SHARED_JOBS_PATH: "$[[ inputs.shared_jobs_path ]]"
   LOCAL_JOBS_PATH: "$[[ inputs.local_jobs_path ]]"
   MACHINE_FILES: "$[[ inputs.machine_files ]]"
-  BASE_BRANCH: "origin/$[[ inputs.base_branch ]]"
+  REF_BRANCH: "origin/$[[ inputs.ref_branch ]]"
 
 # Job override check
 check-job-overrides:
@@ -79,7 +79,7 @@ check-job-overrides:
       echo -e "Shared jobs path: $SHARED_JOBS_PATH"
       echo -e "Local jobs path: $LOCAL_JOBS_PATH"
       echo -e "Machine files: $MACHINE_FILES"
-      echo -e "Base branch: $BASE_BRANCH"
+      echo -e "Base branch: $REF_BRANCH"
       echo ""
 
       # Check if submodule exists
@@ -88,28 +88,28 @@ check-job-overrides:
         exit 1
       fi
 
-      if ! git rev-parse origin/$BASE_BRANCH >/dev/null 2>&1; then
-        echo -e "Error: origin/$BASE_BRANCH not found"
+      if ! git rev-parse $REF_BRANCH >/dev/null 2>&1; then
+        echo -e "Error: $REF_BRANCH not found"
         exit 1
       fi
 
       # Find merge base
-      if ! merge_base=$(git merge-base HEAD $BASE_BRANCH 2>&1); then
-        echo -e "Error: Cannot find merge base with $BASE_BRANCH, skipping check"
+      if ! merge_base=$(git merge-base HEAD $REF_BRANCH 2>&1); then
+        echo -e "Error: Cannot find merge base with $REF_BRANCH, skipping check"
         exit 1
       fi
 
       echo "Merge base: $merge_base"
 
       # Get submodule commits at three points
-      base_submodule=$(git ls-tree $merge_base $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
-      current_submodule=$(git ls-tree HEAD $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
-      develop_submodule=$(git ls-tree $BASE_BRANCH $SUBMODULE_PATH 2>/dev/null | awk '{print $3}')
+      base_submodule=$(git rev-parse "$merge_base:$SUBMODULE_PATH" 2>/dev/null)
+      current_submodule=$(git rev-parse "HEAD:$SUBMODULE_PATH" 2>/dev/null)
+      develop_submodule=$(git rev-parse "$REF_BRANCH:$SUBMODULE_PATH" 2>/dev/null)
 
       # Validate commit hashes
       if [ -z "$base_submodule" ] || [ -z "$current_submodule" ] || [ -z "$develop_submodule" ]; then
-        echo "Warning: Could not extract submodule commits, skipping check"
-        exit 0
+        echo "Error: Could not extract submodule commits, skipping check"
+        exit 1
       fi
 
       if [[ ! "$base_submodule" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$current_submodule" =~ ^[0-9a-f]{40}$ ]]; then
@@ -119,7 +119,7 @@ check-job-overrides:
 
       echo "Base submodule:    $base_submodule (where branch diverged)"
       echo "Current submodule: $current_submodule (branch HEAD)"
-      echo "Develop submodule: $develop_submodule ($BASE_BRANCH)"
+      echo "Develop submodule: $develop_submodule ($REF_BRANCH)"
       echo ""
 
       # Determine what changed
@@ -139,10 +139,10 @@ check-job-overrides:
         echo "Branch has not updated submodule, skipping override check"
         if [ "$develop_changed" = "true" ]; then
           echo ""
-          echo "INFO: The $BASE_BRANCH branch has submodule changes."
-          echo "Consider merging $BASE_BRANCH to get the latest shared job definitions:"
+          echo "INFO: The $REF_BRANCH branch has submodule changes."
+          echo "Consider merging $REF_BRANCH to get the latest shared job definitions:"
           echo "  git fetch origin"
-          echo "  git merge $BASE_BRANCH"
+          echo "  git merge $REF_BRANCH"
         fi
         exit 0
       fi
@@ -153,20 +153,20 @@ check-job-overrides:
       # Warn if develop has moved ahead
       if [ "$develop_changed" = "true" ]; then
         echo "=========================================="
-        echo "WARNING: $BASE_BRANCH has submodule changes!"
+        echo "WARNING: $REF_BRANCH has submodule changes!"
         echo "=========================================="
         echo ""
-        echo "The $BASE_BRANCH branch also has submodule updates:"
+        echo "The $REF_BRANCH branch also has submodule updates:"
         echo "  Base:    $base_submodule"
-        echo "  $BASE_BRANCH: $develop_submodule"
+        echo "  $REF_BRANCH: $develop_submodule"
         echo ""
-        echo "RECOMMENDATION: Merge $BASE_BRANCH into your branch before proceeding:"
+        echo "RECOMMENDATION: Merge $REF_BRANCH into your branch before proceeding:"
         echo "  git fetch origin"
-        echo "  git merge $BASE_BRANCH"
+        echo "  git merge $REF_BRANCH"
         echo ""
         echo "This ensures you have the latest shared job definitions."
         echo ""
-        echo "To see what changed in $BASE_BRANCH:"
+        echo "To see what changed in $REF_BRANCH:"
         echo "  cd $SUBMODULE_PATH"
         echo "  git diff $base_submodule..$develop_submodule -- $SHARED_JOBS_PATH/"
         echo ""
