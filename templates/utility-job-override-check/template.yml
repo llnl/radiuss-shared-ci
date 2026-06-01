@@ -287,12 +287,19 @@ check-job-overrides:
       fi
   rules:
     # Only run when submodule reference has changed in this branch
-    - changes:
-        - $[[ inputs.submodule_path ]]
+    - if: $CI_PIPELINE_SOURCE != "web"
+      changes:
+        paths:
+          - $[[ inputs.submodule_path ]]
+        compare_to: $[[ inputs.ref_branch ]]
       when: on_success
     # Skip for web-triggered pipelines
     - if: $CI_PIPELINE_SOURCE == "web"
-      when: never
+      changes:
+        paths:
+          - $[[ inputs.submodule_path ]]
+        compare_to: $[[ inputs.ref_branch ]]
+      when: manual
     # Default: don't run
     - when: never
   allow_failure: true
