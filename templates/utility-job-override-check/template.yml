@@ -267,6 +267,7 @@ check-job-overrides:
         echo "This is a WARNING only - the pipeline will continue."
         echo "=========================================="
         echo ""
+        exit 1
       else
         echo "No override conflicts detected."
         echo "All local job overrides are compatible with updated shared jobs."
