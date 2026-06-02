@@ -39,7 +39,8 @@ Quick Decision Tree
       ├─ Build and test only → Machine components
       ├─ Performance tracking → + performance-pipeline
       ├─ Skip draft PRs → + utility-draft-pr-filter
-      └─ Skip non-PR branches → + utility-branch-skip
+      ├─ Skip non-PR branches → + utility-branch-skip
+      └─ Track shared-job overrides → + utility-job-override-check
 
 =========================
 Choosing Machines
@@ -241,6 +242,35 @@ utility-branch-skip
 
 .. note::
    Both draft PRs filter and branch skip utilities can be used together depending on your needs.
+
+utility-job-override-check
+==========================
+
+**Purpose**: Warn when shared CI jobs updated through the ``radiuss-spack-configs``
+submodule may conflict with your local job overrides.
+
+**When to use**:
+
+- Your project pins ``radiuss-spack-configs`` as a submodule and leverages shared CI jobs
+- You maintain local overrides of shared CI jobs
+- You want a heads-up when a submodule bump renames or modifies jobs you override
+
+**How it works**:
+
+1. Runs only when your branch bumps the submodule pointer
+2. Diffs shared CI jobs between where your branch diverged and ``HEAD``
+3. Reports renamed, removed, or ``SPEC``-modified jobs that you override locally
+
+The check is advisory and never fails the pipeline.
+
+**Adding it**:
+
+.. code-block:: yaml
+
+   include:
+     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-job-override-check@2026.6.0
+
+All inputs are optional and default to the conventional RADIUSS project layout.
 
 ============================
 Performance Pipeline

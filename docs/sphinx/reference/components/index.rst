@@ -28,7 +28,7 @@ RADIUSS Shared CI provides 9 reusable components organized into four categories:
   - :doc:`performance-pipeline` - Benchmarking and GitHub reporting
 
 **Utilities:**
-  - :doc:`utility-components` - Draft PR filter, branch skip (2 components)
+  - :doc:`utility-components` - Draft PR filter, branch skip, job override check (3 components)
 
 ==========================
 How to Use This Reference
