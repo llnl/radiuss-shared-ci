@@ -67,6 +67,7 @@ check-job-overrides:
   variables:
     GIT_STRATEGY: fetch
     GIT_DEPTH: 0  # Full clone needed for merge-base calculation
+    GIT_SUBMODULE_STRATEGY: normal
   script:
     - |
       set -e
@@ -84,17 +85,17 @@ check-job-overrides:
 
       # Check if submodule exists
       if [ ! -d "$SUBMODULE_PATH" ]; then
-        echo -e "Error: Submodule $SUBMODULE_PATH does not exist, skipping check"
+        echo -e "Error: Submodule $SUBMODULE_PATH does not exist; cannot run job override check"
         exit 1
       fi
 
-      if ! git rev-parse $REF_BRANCH >/dev/null 2>&1; then
+      if ! git rev-parse "$REF_BRANCH" >/dev/null 2>&1; then
         echo -e "Error: $REF_BRANCH not found"
         exit 1
       fi
 
       # Find merge base
-      if ! merge_base=$(git merge-base HEAD $REF_BRANCH 2>&1); then
+      if ! merge_base=$(git merge-base HEAD "$REF_BRANCH" 2>&1); then
         echo -e "Error: Cannot find merge base with $REF_BRANCH, skipping check"
         exit 1
       fi
@@ -112,7 +113,7 @@ check-job-overrides:
         exit 1
       fi
 
-      if [[ ! "$base_submodule" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$current_submodule" =~ ^[0-9a-f]{40}$ ]]; then
+      if [[ ! "$base_submodule" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$current_submodule" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$develop_submodule" =~ ^[0-9a-f]{40}$ ]]; then
         echo "Error: Invalid submodule commit hash detected"
         exit 1
       fi
@@ -162,8 +163,7 @@ check-job-overrides:
       fi
 
       # Check each machine file for override conflicts
-      cd $SUBMODULE_PATH
-
+      cd "$CI_PROJECT_DIR/$SUBMODULE_PATH"
       found_issues=false
 
       for machine_file in $MACHINE_FILES; do
