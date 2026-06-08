@@ -86,6 +86,10 @@ spec:
       default: ""
 
 ---
+
+workflow:
+  name: "performance"
+
 # Sets ID tokens for every job using `default:`
 include:
   - project: 'lc-templates/id_tokens'

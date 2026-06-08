@@ -55,6 +55,10 @@ spec:
       default: "ALLOC_${CI_PIPELINE_ID}"
 
 ---
+
+workflow:
+  name: "dane"
+
 # Sets ID tokens for every job using `default:`
 include:
   - project: 'lc-templates/id_tokens'
