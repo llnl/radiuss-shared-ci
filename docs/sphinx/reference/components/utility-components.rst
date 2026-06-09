@@ -19,7 +19,7 @@ pipelines. They aim at adding features that are not provided by GitLab.
 Overview
 ========
 
-RADIUSS Shared CI provides 2 utility components:
+RADIUSS Shared CI provides 3 utility components:
 
 .. list-table::
    :header-rows: 1
@@ -31,8 +31,10 @@ RADIUSS Shared CI provides 2 utility components:
      - Skip CI on draft pull requests to save resources
    * - **utility-branch-skip**
      - Skip CI on branches not associated with a PR
+   * - **utility-job-override-check**
+     - Warn when updated shared spack-config jobs may conflict with local overrides
 
-Both components are **optional** and can be used independently or together.
+All components are **optional** and can be used independently or together.
 
 =========================
 utility-draft-pr-filter
@@ -316,6 +318,114 @@ Require PR for all branches (even main/develop):
 
 .. warning::
    This will skip CI on main/develop if they don't have open PRs!
+
+===========================
+utility-job-override-check
+===========================
+
+Warn when shared CI job definitions in the ``radiuss-spack-configs`` submodule have
+changed in a way that may affect a project's local job overrides, so developers
+can update their overrides before they silently drift out of sync.
+
+Purpose
+=======
+
+- **Catch Drift Early**: Surface renamed, removed, or modified shared CI jobs that a
+  branch's submodule bump pulls in
+- **Protect Local Overrides**: Flag exactly which local overrides may need updating
+- **Non-Blocking**: Emits warnings only; the pipeline always continues
+
+When to Use
+===========
+
+Enable this utility when:
+
+- Your project pins ``radiuss-spack-configs`` as a submodule and leverages shared CI jobs
+- You maintain local job overrides that extend or replace shared CI jobs
+- You want a heads-up when a submodule bump changes the jobs you override
+
+**Skip if**:
+
+- Your project does not vendor ``radiuss-spack-configs`` as a submodule
+- You use ``radiuss-spack-configs`` only for its Spack configs and define your
+  own CI jobs locally (there are no shared CI jobs to override)
+
+Inputs
+======
+
+All inputs are optional; defaults match the conventional RADIUSS project layout.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 15 60
+
+   * - Input
+     - Required
+     - Description
+   * - ``submodule_path``
+     - No
+     - Path to the ``radiuss-spack-configs`` submodule (default:
+       ``"scripts/radiuss-spack-configs"``)
+   * - ``shared_jobs_path``
+     - No
+     - Path to shared job definitions within the submodule (default:
+       ``"gitlab/radiuss-jobs"``)
+   * - ``local_jobs_path``
+     - No
+     - Path to local job overrides in the project (default: ``".gitlab/jobs"``)
+   * - ``machine_files``
+     - No
+     - Space-separated list of machine YAML files to check (default:
+       ``"dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml"``)
+   * - ``ref_branch``
+     - No
+     - Base branch used to detect divergence (default: ``"develop"``)
+
+Behavior
+========
+
+The component runs only when the branch itself changed the submodule pointer
+(its rules compare the submodule path against ``ref_branch`` using the merge
+base). When it runs, it:
+
+1. Resolves the submodule commit at three points: the merge base with
+   ``ref_branch`` (where the branch diverged), the branch ``HEAD``, and
+   ``ref_branch``
+2. For each ``machine_files`` entry that has a matching local override, diffs the
+   shared jobs between the merge-base commit and ``HEAD`` and reports:
+
+   - **Renamed/removed** jobs that the project overrides locally
+   - **Modified** jobs whose ``SPEC`` changed between the two commits
+
+3. Warns separately if ``ref_branch`` has also advanced the submodule, suggesting
+   a merge to pick up the latest shared definitions
+
+The check is advisory: the job uses ``allow_failure: true`` and never fails the
+pipeline.
+
+Usage
+=====
+
+.. code-block:: yaml
+
+   include:
+     - component: .../base-pipeline@v2026.02.2
+       inputs: { ... }
+
+     - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-job-override-check@2026.6.0
+
+With the conventional project layout no inputs are required. Override the
+defaults only when your paths differ:
+
+.. code-block:: yaml
+
+   - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-job-override-check@2026.6.0
+     inputs:
+       submodule_path: "scripts/radiuss-spack-configs"
+       shared_jobs_path: "gitlab/radiuss-jobs"
+       local_jobs_path: ".gitlab/jobs"
+       machine_files: "dane.yml matrix.yml corona.yml tioga.yml tuolumne.yml"
+       ref_branch: "develop"
 
 ===================
 Combining Utilities

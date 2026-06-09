@@ -13,6 +13,10 @@ spec:
       description: >
         Skips CI execution on branches that are not associated with pull requests.
         Requires GitHub integration with GITHUB_TOKEN.
+    utility-job-override-check:
+      description: >
+        Warns when changes to shared CI jobs in the radiuss-spack-configs submodule
+        may conflict with a project's local job overrides. Advisory only.
     base-pipeline:
       description: >
         Main pipeline setup component that orchestrates machine-specific child pipelines,
