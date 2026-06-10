@@ -62,6 +62,9 @@ Core Components
    * - **utility-branch-skip**
      - Skip CI on branches not associated with PRs
      - ``github_token``, ``github_project_name``, ``github_project_org``
+   * - **utility-job-override-check**
+     - Warn when updated shared CI jobs may conflict with local overrides
+     - none required (``submodule_path``, ``local_jobs_path``, ``machine_files``, ``ref_branch``)
 
 ==================
 Required Stages

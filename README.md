@@ -294,6 +294,25 @@ include:
 
 [View component →](https://lc.llnl.gov/gitlab/radiuss/radiuss-shared-ci/-/components/utility-branch-skip)
 
+#### Job Override Check
+
+Warns when shared CI jobs updated via the `radiuss-spack-configs` submodule may
+conflict with a project's local job overrides. Advisory only (does not fail the
+pipeline). Runs when a branch bumps the submodule pointer.
+
+**Usage:**
+
+```yaml
+include:
+  - component: $CI_SERVER_FQDN/radiuss/radiuss-shared-ci/utility-job-override-check@2026.6.0
+```
+
+All inputs (`submodule_path`, `shared_jobs_path`, `local_jobs_path`,
+`machine_files`, `ref_branch`) are optional and default to the conventional
+RADIUSS project layout.
+
+[View component →](https://lc.llnl.gov/gitlab/radiuss/radiuss-shared-ci/-/components/utility-job-override-check)
+
 ## Examples
 
 Complete configuration examples in [`examples/`](examples/):

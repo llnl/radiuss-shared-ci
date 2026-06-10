@@ -6,6 +6,15 @@ The format is based on [Keep a
 Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- New `utility-job-override-check` component: warns when shared CI jobs updated
+  through the `radiuss-spack-configs` submodule (renamed, removed, or `SPEC`
+  changed) may conflict with a project's local job overrides. Advisory only;
+  runs when a branch bumps the submodule pointer.
+
 ## [2026.5.2]
 
 ## Changed
