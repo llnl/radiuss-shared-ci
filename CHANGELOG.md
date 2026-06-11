@@ -8,12 +8,20 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 
 ## [Unreleased]
 
+## [2026.6.0]
+
 ### Added
 
 - New `utility-job-override-check` component: warns when shared CI jobs updated
   through the `radiuss-spack-configs` submodule (renamed, removed, or `SPEC`
   changed) may conflict with a project's local job overrides. Advisory only;
   runs when a branch bumps the submodule pointer.
+
+### Changed
+
+- Component pipelines (corona, dane, matrix, performance, tioga, tuolumne) now
+  set a `workflow:name`, giving each child pipeline a readable name in the
+  GitLab UI.
 
 ## [2026.5.2]
 
