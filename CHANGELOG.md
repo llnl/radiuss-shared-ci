@@ -23,6 +23,10 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
   set a `workflow:name`, giving each child pipeline a readable name in the
   GitLab UI.
 
+### Fixed
+
+- Change of variable name broke mechanism to turn shared allocs on a given machine.
+
 ## [2026.5.2]
 
 ## Changed
