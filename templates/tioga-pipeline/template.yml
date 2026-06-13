@@ -96,7 +96,7 @@ stages:
     - if: '$ADVANCED_JOB == "ON" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop" && $ALL_TARGETS != "ON"'
       when: never
     # Do not allocate resource if the required variable is set to OFF
-    - if: '$CI_JOB_NAME =~ /resources/ && $[[ inputs.shared_alloc ]] == "OFF"'
+    - if: '$CI_JOB_NAME =~ /resources/ && "$[[ inputs.shared_alloc ]]" == "OFF"'
       when: never
     # We should always release resources allocated in the pipeline
     - if: '$CI_JOB_NAME =~ /release_resources/'
