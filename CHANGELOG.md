@@ -22,6 +22,7 @@ Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
 - Component pipelines (corona, dane, matrix, performance, tioga, tuolumne) now
   set a `workflow:name`, giving each child pipeline a readable name in the
   GitLab UI.
+- Default allocation name changed to add more information.
 
 ### Fixed
 

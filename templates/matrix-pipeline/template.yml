@@ -52,7 +52,7 @@ spec:
     alloc_name:
       type: string
       description: "Name for shared resource allocation"
-      default: "ALLOC_${CI_PIPELINE_ID}"
+      default: "${CI_PIPELINE_ID}_${CI_PROJECT_NAME}"
 
 ---
 
