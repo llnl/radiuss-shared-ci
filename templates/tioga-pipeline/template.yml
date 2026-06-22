@@ -52,7 +52,7 @@ spec:
     alloc_name:
       type: string
       description: "Name for shared resource allocation"
-      default: "ALLOC_${CI_PIPELINE_ID}"
+      default: "${CI_PIPELINE_ID}_${CI_PROJECT_NAME}"
 
 ---
 
@@ -96,7 +96,7 @@ stages:
     - if: '$ADVANCED_JOB == "ON" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "develop" && $ALL_TARGETS != "ON"'
       when: never
     # Do not allocate resource if the required variable is set to OFF
-    - if: '$CI_JOB_NAME =~ /resources/ && $RSCI_TIOGA_SHARED_ALLOC == "OFF"'
+    - if: '$CI_JOB_NAME =~ /resources/ && $[[ inputs.shared_alloc ]] == "OFF"'
       when: never
     # We should always release resources allocated in the pipeline
     - if: '$CI_JOB_NAME =~ /release_resources/'
