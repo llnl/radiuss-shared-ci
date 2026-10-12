@@ -109,6 +109,25 @@ stages:
   variables:
     TEMPLATE_CANNOT_BE_EMPTY: "true"
 
+.rsci_load_modules:
+  script:
+    - |
+      if [[ -n "${MODULE_LIST:-}" ]]
+      then
+        if ! command -v module >/dev/null 2>&1
+        then
+          if [[ -r /usr/share/lmod/lmod/init/bash ]]
+          then
+            source /usr/share/lmod/lmod/init/bash
+          else
+            echo "MODULE_LIST is set but the Lmod initialization script is unavailable." >&2
+            exit 1
+          fi
+        fi
+        echo "Loading modules before scheduler launch: ${MODULE_LIST}"
+        module load ${MODULE_LIST}
+      fi
+
 .corona_reproducer_init:
   script:
     - |
@@ -132,6 +151,11 @@ stages:
 .corona_reproducer_job:
   script:
     - |
+      if [[ -n "${MODULE_LIST:-}" ]]
+      then
+        echo -e 'if ! command -v module >/dev/null 2>&1; then source /usr/share/lmod/lmod/init/bash; fi'
+        echo -e 'module load ${MODULE_LIST}'
+      fi
       echo -e "flux watch \$(flux batch -o output.stdout.type=kvs ${RSCI_CORONA_JOB_ALLOC} ${RSCI_JOB_CMD} )"
       echo -e "\e[7;32m### End of reproducer\e[0m"
 
@@ -152,6 +176,8 @@ stages:
     - !reference [.corona_reproducer_init, script]
     - !reference [.corona_reproducer_vars, script]
     - !reference [.corona_reproducer_job, script]
+    # Prepare the environment inherited by srun/flux batch.
+    - !reference [.rsci_load_modules, script]
     # The actual launch command
     - !reference [.corona_job_command, script]
 
