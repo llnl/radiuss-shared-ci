@@ -85,6 +85,11 @@ spec:
       description: "GitHub organization name"
       default: ""
 
+    github_dispatch_ref:
+      type: string
+      description: "Branch or tag in the GitHub repository used to dispatch the benchmark workflow. Defaults to the GitLab commit ref. When different, the workflow must accept a source_ref input."
+      default: ""
+
 ---
 
 workflow:
@@ -104,6 +109,7 @@ variables:
   RSCI_GITHUB_TOKEN: "$[[ inputs.github_token ]]"
   RSCI_GITHUB_PROJECT_NAME: "$[[ inputs.github_project_name ]]"
   RSCI_GITHUB_PROJECT_ORG: "$[[ inputs.github_project_org ]]"
+  RSCI_GITHUB_DISPATCH_REF: "$[[ inputs.github_dispatch_ref ]]"
 
 stages:
   - perf-runs
@@ -297,13 +303,18 @@ stages:
           BENCHMARK_NAME=$(basename "$(dirname "$file")")
           echo "Sending benchmark results to GitHub for ${BENCHMARK_NAME}..."
           BENCHMARK_DATA=$(base64 -w 0 "$file")
+          DISPATCH_REF="${RSCI_GITHUB_DISPATCH_REF:-${CI_COMMIT_REF_NAME}}"
+          SOURCE_REF_INPUT=""
+          if [ "$DISPATCH_REF" != "$CI_COMMIT_REF_NAME" ]; then
+            SOURCE_REF_INPUT=", \"source_ref\": \"${CI_COMMIT_REF_NAME}\""
+          fi
           RESPONSE_BODY=$(mktemp)
           HTTP_CODE=$(curl --retry 3 --retry-delay 5 --retry-connrefused --max-time 30 -X POST \
                --url "https://api.github.com/repos/${RSCI_GITHUB_PROJECT_ORG}/${RSCI_GITHUB_PROJECT_NAME}/actions/workflows/benchmark.yml/dispatches" \
                --header "Authorization: token $RSCI_GITHUB_TOKEN" \
                --header "Accept: application/vnd.github.v3+json" \
                --header "Content-Type: application/json" \
-               --data "{ \"ref\": \"${CI_COMMIT_REF_NAME}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\", \"commit_sha\": \"${CI_COMMIT_SHA}\" } }" \
+               --data "{ \"ref\": \"${DISPATCH_REF}\", \"inputs\": { \"benchmark_name\": \"${BENCHMARK_NAME}\", \"benchmark_data\": \"${BENCHMARK_DATA}\", \"commit_sha\": \"${CI_COMMIT_SHA}\"${SOURCE_REF_INPUT} } }" \
                --output "$RESPONSE_BODY" \
                --write-out "%{http_code}" \
                --silent \
